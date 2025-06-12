@@ -14,6 +14,7 @@ final class RAGFlow
     {
         return self::factory()
             ->withApiKey($apiKey)
+            ->withApiKey($apiKey)
             ->withOrganization($organization)
             ->withProject($project)
             ->withHttpHeader('RAGFlow-Beta', 'assistants=v2')
