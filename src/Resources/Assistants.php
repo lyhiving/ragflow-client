@@ -4,7 +4,7 @@
  * @Date: 2025-01-23 13:04:37
  * @LastEditors: FutureMeng futuremeng@gmail.com
  * @LastEditTime: 2025-01-23 16:46:04
- * @FilePath: /ragflow-client/src/Resources/Assistants.php
+ * @FilePath: /RAGFlow-php-client/src/Resources/Assistants.php
  * @Description: 
  * Copyright (c) 2025 by Jiulu.ltd, All Rights Reserved.
  */

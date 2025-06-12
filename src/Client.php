@@ -21,7 +21,6 @@ use RAGFlow\Resources\FineTunes;
 use RAGFlow\Resources\FineTuning;
 use RAGFlow\Resources\Images;
 use RAGFlow\Resources\Models;
-use RAGFlow\Resources\DataSets;
 use RAGFlow\Resources\Moderations;
 use RAGFlow\Resources\Threads;
 use RAGFlow\Resources\VectorStores;
@@ -129,17 +128,6 @@ final class Client implements ClientContract
     public function models(): Models
     {
         return new Models($this->transporter);
-    }
-
-    
-    /**
-     * List and describe the various dataset available in the API.
-     *
-     * @see https://ragflow.io/docs/v0.19.0/http_api_reference#dataset-management
-     */
-    public function datasets(): DataSetS
-    {
-        return new DataSetS($this->transporter);
     }
 
     /**

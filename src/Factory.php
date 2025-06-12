@@ -147,6 +147,7 @@ final class Factory
     public function make(): Client
     {
         $headers = Headers::create();
+
         if ($this->apiKey !== null) {
             $headers = Headers::withAuthorization(ApiKey::from($this->apiKey));
         }

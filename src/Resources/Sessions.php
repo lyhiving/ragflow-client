@@ -4,7 +4,7 @@
  * @Date: 2025-01-23 17:12:39
  * @LastEditors: FutureMeng futuremeng@gmail.com
  * @LastEditTime: 2025-01-23 17:16:20
- * @FilePath: /ragflow-client/src/Resources/Sessions.php
+ * @FilePath: /RAGFlow-php-client/src/Resources/Sessions.php
  * @Description: 
  * Copyright (c) 2025 by Jiulu.ltd, All Rights Reserved.
  */
