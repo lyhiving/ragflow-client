@@ -1,147 +1,216 @@
 <?php
 
-namespace lyhiving\ragflow;
+declare (strict_types = 1);
 
-use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Exception\RequestException;
-use lyhiving\ragflow\Exception\RagflowException;
+namespace RAGFlow;
 
-/**
- * @property Api\Agent $agent
- * @property Api\Chat $chat
- * @property Api\Dataset $dataset
- * @property Api\Document $document
- * @property Api\Chunk $chunk
- * @property Api\Session $session
- */
-class Client
+use RAGFlow\Contracts\ClientContract;
+use RAGFlow\Contracts\Resources\ThreadsContract;
+use RAGFlow\Contracts\Resources\VectorStoresContract;
+use RAGFlow\Contracts\TransporterContract;
+use RAGFlow\Resources\Assistants;
+use RAGFlow\Resources\Sessions;
+use RAGFlow\Resources\Audio;
+use RAGFlow\Resources\Batches;
+use RAGFlow\Resources\Chat;
+use RAGFlow\Resources\Completions;
+use RAGFlow\Resources\Edits;
+use RAGFlow\Resources\Embeddings;
+use RAGFlow\Resources\Files;
+use RAGFlow\Resources\FineTunes;
+use RAGFlow\Resources\FineTuning;
+use RAGFlow\Resources\Images;
+use RAGFlow\Resources\Models;
+use RAGFlow\Resources\DataSets;
+use RAGFlow\Resources\Moderations;
+use RAGFlow\Resources\Threads;
+use RAGFlow\Resources\VectorStores;
+
+final class Client implements ClientContract
 {
-    protected HttpClient $httpClient;
-    protected Config $config;
-
-    public function __construct(string $apiKey, string $apiEndpoint, float $requestTimeout = 30.0)
+    /**
+     * Creates a Client instance with the given API token.
+     */
+    public function __construct(private readonly TransporterContract $transporter)
     {
-        $this->config = new Config($apiKey, $apiEndpoint, $requestTimeout);
-        $this->httpClient = new HttpClient([
-            'base_uri' => rtrim($apiEndpoint, '/') . '/',
-            'headers' => [
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Accept' => 'application/json',
-            ],
-            'timeout' => $requestTimeout,
-        ]);
+        // ..
     }
 
-    public function __get(string $name)
+    /**
+     * CHAT ASSISTANT MANAGEMENT
+     * 
+     * Build assistants that can call models and use tools to perform tasks.
+     *
+     * @see https://ragflow.server/user-setting/api#create-chat-assistant
+     */
+    public function assistants(): Assistants
     {
-        $classMap = [
-            'agent' => Api\Agent::class,
-            'chat' => Api\Chat::class,
-            'dataset' => Api\Dataset::class,
-            'document' => Api\Document::class,
-            'chunk' => Api\Chunk::class,
-            'session' => Api\Session::class,
-        ];
-
-        if (array_key_exists($name, $classMap)) {
-            return new $classMap[$name]($this);
-        }
-        throw new \InvalidArgumentException("Invalid API module: {$name}");
+        return new Assistants($this->transporter);
     }
 
-    public function get(string $uri, array $params = []): array
+    /**
+     * SESSION MANAGEMENT
+     *
+     */
+    public function sessions(): Sessions
     {
-        return $this->request('GET', $uri, ['query' => $params]);
+        return new Sessions($this->transporter);
     }
 
-    public function post(string $uri, array $data = []): array
+
+    /**
+     * Converse with chat assistant
+     * 
+     * Given a prompt, the model will return one or more predicted completions, and can also return the probabilities
+     * of alternative tokens at each position.
+     *
+     * @see https://ragflow.server/docs/api-reference/completions
+     */
+    public function completions(): Completions
     {
-        return $this->request('POST', $uri, ['json' => $data]);
+        return new Completions($this->transporter);
     }
 
-    public function put(string $uri, array $data = []): array
+    /**
+     * Given a chat conversation, the model will return a chat completion response.
+     *
+     * @see https://ragflow.server/docs/api-reference/chat
+     */
+    public function chat(): Chat
     {
-        return $this->request('PUT', $uri, ['json' => $data]);
+        return new Chat($this->transporter);
     }
 
-    public function delete(string $uri, array $data = []): array
+    /**
+     * Get a vector representation of a given input that can be easily consumed by machine learning models and algorithms.
+     *
+     * @see https://ragflow.server/docs/api-reference/embeddings
+     */
+    public function embeddings(): Embeddings
     {
-        return $this->request('DELETE', $uri, ['json' => $data]);
+        return new Embeddings($this->transporter);
     }
 
-    public function postMultipart(string $uri, array $multipart = []): array
+    /**
+     * Learn how to turn audio into text.
+     *
+     * @see https://ragflow.server/docs/api-reference/audio
+     */
+    public function audio(): Audio
     {
-        return $this->request('POST', $uri, ['multipart' => $multipart]);
+        return new Audio($this->transporter);
     }
 
-    public function stream(string $uri, array $data = [], callable $callback = null)
+    /**
+     * Given a prompt and an instruction, the model will return an edited version of the prompt.
+     *
+     * @see https://ragflow.server/docs/api-reference/edits
+     */
+    public function edits(): Edits
     {
-        try {
-            $options = ['json' => $data];
-            $options['stream'] = true;
-            $options['buffer'] = false;
-            
-            $response = $this->httpClient->post($uri, $options);
-            $body = $response->getBody();
-            
-            while (!$body->eof()) {
-                $line = $body->read(1024);
-                if ($callback) {
-                    $callback($line);
-                }
-            }
-            
-            return true;
-        } catch (RequestException $e) {
-            $message = $e->getMessage();
-            if ($e->hasResponse()) {
-                $errorData = json_decode((string) $e->getResponse()->getBody(), true);
-                $message = $errorData['message'] ?? $message;
-            }
-            throw new RagflowException("HTTP request failed: " . $message, $e->getCode(), $e);
-        }
+        return new Edits($this->transporter);
     }
 
-    public function downloadFile(string $uri, string $savePath): bool
+    /**
+     * Files are used to upload documents that can be used with features like Fine-tuning.
+     *
+     * @see https://ragflow.server/docs/api-reference/files
+     */
+    public function files(): Files
     {
-        try {
-            $response = $this->httpClient->get($uri, ['sink' => $savePath]);
-            return $response->getStatusCode() === 200;
-        } catch (RequestException $e) {
-            throw new RagflowException("Failed to download file: " . $e->getMessage(), $e->getCode(), $e);
-        }
+        return new Files($this->transporter);
     }
 
-    public function request(string $method, string $uri, array $options = []): array
+    /**
+     * List and describe the various models available in the API.
+     *
+     * @see https://ragflow.server/docs/api-reference/models
+     */
+    public function models(): Models
     {
-        try {
-            $response = $this->httpClient->request($method, $uri, $options);
-            $data = json_decode((string) $response->getBody(), true);
-            
-            if (json_last_error() !== JSON_ERROR_NONE) {
-                throw new RagflowException("Invalid JSON response: " . json_last_error_msg());
-            }
-            
-            if (isset($data['code']) && $data['code'] !== 0) {
-                throw new RagflowException($data['message'] ?? 'Unknown API error', $data['code']);
-            }
-            
-            return $data;
-        } catch (RequestException $e) {
-            $message = $e->getMessage();
-            if ($e->hasResponse()) {
-                $errorData = json_decode((string) $e->getResponse()->getBody(), true);
-                $message = $errorData['message'] ?? $message;
-                $code = $errorData['code'] ?? $e->getCode();
-            } else {
-                $code = $e->getCode();
-            }
-            throw new RagflowException("HTTP request failed: " . $message, $code, $e);
-        }
+        return new Models($this->transporter);
     }
 
-    public function getConfig(): Config
+    
+    /**
+     * List and describe the various dataset available in the API.
+     *
+     * @see https://ragflow.io/docs/v0.19.0/http_api_reference#dataset-management
+     */
+    public function datasets(): DataSetS
     {
-        return $this->config;
+        return new DataSetS($this->transporter);
+    }
+
+    /**
+     * Manage fine-tuning jobs to tailor a model to your specific training data.
+     *
+     * @see https://ragflow.server/docs/api-reference/fine-tuning
+     */
+    public function fineTuning(): FineTuning
+    {
+        return new FineTuning($this->transporter);
+    }
+
+    /**
+     * Manage fine-tuning jobs to tailor a model to your specific training data.
+     *
+     * @see https://ragflow.server/docs/api-reference/fine-tunes
+     * @deprecated RAGFlow has deprecated this endpoint and will stop working by January 4, 2024.
+     * https://ragflow.com/blog/gpt-3-5-turbo-fine-tuning-and-api-updates#updated-gpt-3-models
+     */
+    public function fineTunes(): FineTunes
+    {
+        return new FineTunes($this->transporter);
+    }
+
+    /**
+     * Given an input text, outputs if the model classifies it as violating RAGFlow's content policy.
+     *
+     * @see https://ragflow.server/docs/api-reference/moderations
+     */
+    public function moderations(): Moderations
+    {
+        return new Moderations($this->transporter);
+    }
+
+    /**
+     * Given a prompt and/or an input image, the model will generate a new image.
+     *
+     * @see https://ragflow.server/docs/api-reference/images
+     */
+    public function images(): Images
+    {
+        return new Images($this->transporter);
+    }
+
+    /**
+     * Create threads that assistants can interact with.
+     *
+     * @see https://ragflow.server/docs/api-reference/threads
+     */
+    public function threads(): ThreadsContract
+    {
+        return new Threads($this->transporter);
+    }
+
+    /**
+     * Create large batches of API requests for asynchronous processing. The Batch API returns completions within 24 hours.
+     *
+     * @see https://ragflow.server/docs/api-reference/batch
+     */
+    public function batches(): Batches
+    {
+        return new Batches($this->transporter);
+    }
+
+    /**
+     * Create and update vector stores that assistants can interact with
+     *
+     * @see https://ragflow.server/docs/api-reference/vector-stores
+     */
+    public function vectorStores(): VectorStoresContract
+    {
+        return new VectorStores($this->transporter);
     }
 }
