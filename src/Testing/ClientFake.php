@@ -19,7 +19,7 @@ use RAGFlow\Testing\Resources\FilesTestResource;
 use RAGFlow\Testing\Resources\FineTunesTestResource;
 use RAGFlow\Testing\Resources\FineTuningTestResource;
 use RAGFlow\Testing\Resources\ImagesTestResource;
-use RAGFlow\Testing\Resources\ModelsTestResource;
+use RAGFlow\Testing\Resources\DatasetsTestResource;
 use RAGFlow\Testing\Resources\ModerationsTestResource;
 use RAGFlow\Testing\Resources\ThreadsTestResource;
 use RAGFlow\Testing\Resources\VectorStoresTestResource;
@@ -162,9 +162,9 @@ class ClientFake implements ClientContract
         return new FilesTestResource($this);
     }
 
-    public function models(): ModelsTestResource
+    public function datasets(): DatasetsTestResource
     {
-        return new ModelsTestResource($this);
+        return new DatasetsTestResource($this);
     }
 
     public function fineTunes(): FineTunesTestResource

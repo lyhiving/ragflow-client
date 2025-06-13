@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RAGFlow\Responses\Models;
+namespace RAGFlow\Responses\Datasets;
 
 use RAGFlow\Contracts\ResponseContract;
 use RAGFlow\Contracts\ResponseHasMetaInformationContract;
@@ -40,10 +40,13 @@ final class ListResponse implements ResponseContract, ResponseHasMetaInformation
      */
     public static function from(array $attributes, MetaInformation $meta): self
     {
+        dd([$attributes, $meta]);
         $data = array_map(fn (array $result): RetrieveResponse => RetrieveResponse::from(
             $result,
             $meta,
         ), $attributes['data']);
+
+        dd($data);
 
         return new self(
             $attributes['object'],

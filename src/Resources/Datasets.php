@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace RAGFlow\Resources;
 
-use RAGFlow\Contracts\Resources\ModelsContract;
-use RAGFlow\Responses\Models\DeleteResponse;
-use RAGFlow\Responses\Models\ListResponse;
-use RAGFlow\Responses\Models\RetrieveResponse;
+use RAGFlow\Contracts\Resources\DatasetsContract;
+use RAGFlow\Responses\Datasets\DeleteResponse;
+use RAGFlow\Responses\Datasets\ListResponse;
+use RAGFlow\Responses\Datasets\RetrieveResponse;
 use RAGFlow\ValueObjects\Transporter\Payload;
 use RAGFlow\ValueObjects\Transporter\Response;
 
-final class Models implements ModelsContract
+final class Datasets implements DatasetsContract
 {
     use Concerns\Transportable;
 
@@ -22,7 +22,7 @@ final class Models implements ModelsContract
      */
     public function list(): ListResponse
     {
-        $payload = Payload::list('models');
+        $payload = Payload::list('datasets');
 
         /** @var Response<array{object: string, data: array<int, array{id: string, object: string, created: int, owned_by: string}>}> $response */
         $response = $this->transporter->requestObject($payload);
@@ -37,7 +37,7 @@ final class Models implements ModelsContract
      */
     public function retrieve(string $model): RetrieveResponse
     {
-        $payload = Payload::retrieve('models', $model);
+        $payload = Payload::retrieve('datasets', $model);
 
         /** @var Response<array{id: string, object: string, created: int, owned_by: string}> $response */
         $response = $this->transporter->requestObject($payload);
@@ -52,7 +52,7 @@ final class Models implements ModelsContract
      */
     public function delete(string $model): DeleteResponse
     {
-        $payload = Payload::delete('models', $model);
+        $payload = Payload::delete('datasets', $model);
 
         /** @var Response<array{id: string, object: string, deleted: bool}> $response */
         $response = $this->transporter->requestObject($payload);

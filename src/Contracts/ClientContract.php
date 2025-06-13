@@ -13,7 +13,7 @@ use RAGFlow\Contracts\Resources\FilesContract;
 use RAGFlow\Contracts\Resources\FineTunesContract;
 use RAGFlow\Contracts\Resources\FineTuningContract;
 use RAGFlow\Contracts\Resources\ImagesContract;
-use RAGFlow\Contracts\Resources\ModelsContract;
+use RAGFlow\Contracts\Resources\DatasetsContract;
 use RAGFlow\Contracts\Resources\ModerationsContract;
 use RAGFlow\Contracts\Resources\ThreadsContract;
 use RAGFlow\Contracts\Resources\VectorStoresContract;
@@ -70,7 +70,7 @@ interface ClientContract
      *
      * @see https://ragflow.server/docs/api-reference/models
      */
-    public function models(): ModelsContract;
+    public function datasets(): DatasetsContract;
 
     /**
      * Manage fine-tuning jobs to tailor a model to your specific training data.

@@ -102,7 +102,7 @@ $client = RAGFlow::factory()
 Lists the currently available models, and provides basic information about each one such as the owner and availability.
 
 ```php
-$response = $client->models()->list();
+$response = $client->datasets()->list();
 
 $response->object; // 'list'
 
@@ -120,7 +120,7 @@ $response->toArray(); // ['object' => 'list', 'data' => [...]]
 Retrieves a model instance, providing basic information about the model such as the owner and permissioning.
 
 ```php
-$response = $client->models()->retrieve('gpt-3.5-turbo-instruct');
+$response = $client->datasets()->retrieve('gpt-3.5-turbo-instruct');
 
 $response->id; // 'gpt-3.5-turbo-instruct'
 $response->object; // 'model'
@@ -135,7 +135,7 @@ $response->toArray(); // ['id' => 'gpt-3.5-turbo-instruct', ...]
 Delete a fine-tuned model.
 
 ```php
-$response = $client->models()->delete('curie:ft-acmeco-2021-03-03-21-44-20');
+$response = $client->datasets()->delete('curie:ft-acmeco-2021-03-03-21-44-20');
 
 $response->id; // 'curie:ft-acmeco-2021-03-03-21-44-20'
 $response->object; // 'model'

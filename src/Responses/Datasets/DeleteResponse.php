@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RAGFlow\Responses\Models;
+namespace RAGFlow\Responses\Datasets;
 
 use RAGFlow\Contracts\ResponseContract;
 use RAGFlow\Contracts\ResponseHasMetaInformationContract;

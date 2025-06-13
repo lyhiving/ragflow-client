@@ -4,6 +4,7 @@ declare (strict_types = 1);
 
 namespace RAGFlow;
 
+use Dflydev\DotAccessData\Data;
 use RAGFlow\Contracts\ClientContract;
 use RAGFlow\Contracts\Resources\ThreadsContract;
 use RAGFlow\Contracts\Resources\VectorStoresContract;
@@ -20,7 +21,7 @@ use RAGFlow\Resources\Files;
 use RAGFlow\Resources\FineTunes;
 use RAGFlow\Resources\FineTuning;
 use RAGFlow\Resources\Images;
-use RAGFlow\Resources\Models;
+use RAGFlow\Resources\Datasets;
 use RAGFlow\Resources\Moderations;
 use RAGFlow\Resources\Threads;
 use RAGFlow\Resources\VectorStores;
@@ -125,9 +126,9 @@ final class Client implements ClientContract
      *
      * @see https://ragflow.server/docs/api-reference/models
      */
-    public function models(): Models
+    public function datasets(): Datasets
     {
-        return new Models($this->transporter);
+        return new Datasets($this->transporter);
     }
 
     /**

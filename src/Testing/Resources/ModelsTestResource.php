@@ -2,14 +2,14 @@
 
 namespace RAGFlow\Testing\Resources;
 
-use RAGFlow\Contracts\Resources\ModelsContract;
+use RAGFlow\Contracts\Resources\DatasetsContract;
 use RAGFlow\Resources\Models;
 use RAGFlow\Responses\Models\DeleteResponse;
 use RAGFlow\Responses\Models\ListResponse;
 use RAGFlow\Responses\Models\RetrieveResponse;
 use RAGFlow\Testing\Resources\Concerns\Testable;
 
-final class ModelsTestResource implements ModelsContract
+final class DatasetsTestResource implements DatasetsContract
 {
     use Testable;
 

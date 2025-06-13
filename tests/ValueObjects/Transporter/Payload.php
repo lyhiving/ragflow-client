@@ -8,7 +8,7 @@ use RAGFlow\ValueObjects\Transporter\Payload;
 use RAGFlow\ValueObjects\Transporter\QueryParams;
 
 it('has a method', function () {
-    $payload = Payload::create('models', []);
+    $payload = Payload::create('datasets', []);
 
     $baseUri = BaseUri::from('api.ragflow.server/v1');
     $headers = Headers::withAuthorization(ApiKey::from('foo'))->withContentType(ContentType::JSON);
@@ -18,7 +18,7 @@ it('has a method', function () {
 });
 
 it('has a uri', function () {
-    $payload = Payload::list('models');
+    $payload = Payload::list('datasets');
 
     $baseUri = BaseUri::from('api.ragflow.server/v1');
     $headers = Headers::withAuthorization(ApiKey::from('foo'))->withContentType(ContentType::JSON);
@@ -35,7 +35,7 @@ it('has a uri', function () {
 });
 
 test('get verb does not have a body', function () {
-    $payload = Payload::list('models');
+    $payload = Payload::list('datasets');
 
     $baseUri = BaseUri::from('api.ragflow.server/v1');
     $headers = Headers::withAuthorization(ApiKey::from('foo'))->withContentType(ContentType::JSON);
@@ -45,7 +45,7 @@ test('get verb does not have a body', function () {
 });
 
 test('post verb has a body', function () {
-    $payload = Payload::create('models', [
+    $payload = Payload::create('datasets', [
         'name' => 'test',
     ]);
 

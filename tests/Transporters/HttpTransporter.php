@@ -32,7 +32,7 @@ beforeEach(function () {
 });
 
 test('request object', function () {
-    $payload = Payload::list('models');
+    $payload = Payload::list('datasets');
 
     $response = new Response(200, ['Content-Type' => 'application/json; charset=utf-8', ...metaHeaders()], json_encode([
         'qdwq',
@@ -55,7 +55,7 @@ test('request object', function () {
 });
 
 test('request object response', function () {
-    $payload = Payload::list('models');
+    $payload = Payload::list('datasets');
 
     $response = new Response(200, ['Content-Type' => 'application/json; charset=utf-8', ...metaHeaders()], json_encode([
         [
@@ -84,7 +84,7 @@ test('request object response', function () {
 });
 
 test('request object server user errors', function () {
-    $payload = Payload::list('models');
+    $payload = Payload::list('datasets');
 
     $response = new Response(401, ['Content-Type' => 'application/json; charset=utf-8'], json_encode([
         'error' => [
@@ -189,7 +189,7 @@ test('error code may be integer', function () {
 });
 
 test('error type may be null', function () {
-    $payload = Payload::list('models');
+    $payload = Payload::list('datasets');
 
     $response = new Response(429, ['Content-Type' => 'application/json; charset=utf-8'], json_encode([
         'error' => [
@@ -322,7 +322,7 @@ test('error message and code may be empty', function () {
 });
 
 test('request object client errors', function () {
-    $payload = Payload::list('models');
+    $payload = Payload::list('datasets');
 
     $baseUri = BaseUri::from('api.ragflow.server');
     $headers = Headers::withAuthorization(ApiKey::from('foo'));
@@ -341,7 +341,7 @@ test('request object client errors', function () {
 });
 
 test('request object client error in response', function () {
-    $payload = Payload::list('models');
+    $payload = Payload::list('datasets');
 
     $baseUri = BaseUri::from('api.ragflow.server');
     $headers = Headers::withAuthorization(ApiKey::from('foo'));
@@ -370,7 +370,7 @@ test('request object client error in response', function () {
 });
 
 test('request object serialization errors', function () {
-    $payload = Payload::list('models');
+    $payload = Payload::list('datasets');
 
     $response = new Response(200, ['Content-Type' => 'application/json; charset=utf-8'], 'err');
 
@@ -398,7 +398,7 @@ test('request plain text', function () {
 });
 
 test('request content', function () {
-    $payload = Payload::list('models');
+    $payload = Payload::list('datasets');
 
     $response = new Response(200, [], json_encode([
         'qdwq',
@@ -421,7 +421,7 @@ test('request content', function () {
 });
 
 test('request content response', function () {
-    $payload = Payload::list('models');
+    $payload = Payload::list('datasets');
 
     $response = new Response(200, [], 'My response content');
 
@@ -436,7 +436,7 @@ test('request content response', function () {
 });
 
 test('request content client errors', function () {
-    $payload = Payload::list('models');
+    $payload = Payload::list('datasets');
 
     $baseUri = BaseUri::from('api.ragflow.server');
     $headers = Headers::withAuthorization(ApiKey::from('foo'));
@@ -455,7 +455,7 @@ test('request content client errors', function () {
 });
 
 test('request content server errors', function () {
-    $payload = Payload::list('models');
+    $payload = Payload::list('datasets');
 
     $response = new Response(401, ['Content-Type' => 'application/json; charset=utf-8'], json_encode([
         'error' => [

@@ -7,7 +7,7 @@ use RAGFlow\Resources\Models;
 it('has models', function () {
     $openAI = RAGFlow::client('foo');
 
-    expect($openAI->models())->toBeInstanceOf(Models::class);
+    expect($openAI->datasets())->toBeInstanceOf(Models::class);
 });
 
 it('has completions', function () {

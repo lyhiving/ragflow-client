@@ -11,7 +11,7 @@ it('records a model retrieve request', function () {
         RetrieveResponse::fake(),
     ]);
 
-    $fake->models()->retrieve('gpt-3.5-turbo-instruct');
+    $fake->datasets()->retrieve('gpt-3.5-turbo-instruct');
 
     $fake->assertSent(Models::class, function ($method, $parameters) {
         return $method === 'retrieve' &&
@@ -24,7 +24,7 @@ it('records a model delete request', function () {
         DeleteResponse::fake(),
     ]);
 
-    $fake->models()->delete('curie:ft-acmeco-2021-03-03-21-44-20');
+    $fake->datasets()->delete('curie:ft-acmeco-2021-03-03-21-44-20');
 
     $fake->assertSent(Models::class, function ($method, $parameters) {
         return $method === 'delete' &&
@@ -37,7 +37,7 @@ it('records a model list request', function () {
         ListResponse::fake(),
     ]);
 
-    $fake->models()->list();
+    $fake->datasets()->list();
 
     $fake->assertSent(Models::class, function ($method) {
         return $method === 'list';

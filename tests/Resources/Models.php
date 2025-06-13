@@ -6,9 +6,9 @@ use RAGFlow\Responses\Models\ListResponse;
 use RAGFlow\Responses\Models\RetrieveResponse;
 
 test('list', function () {
-    $client = mockClient('GET', 'models', [], \RAGFlow\ValueObjects\Transporter\Response::from(modelList(), metaHeaders()));
+    $client = mockClient('GET', 'datasets', [], \RAGFlow\ValueObjects\Transporter\Response::from(modelList(), metaHeaders()));
 
-    $result = $client->models()->list();
+    $result = $client->datasets()->list();
 
     expect($result)
         ->toBeInstanceOf(ListResponse::class)
@@ -26,7 +26,7 @@ test('list', function () {
 test('retrieve', function () {
     $client = mockClient('GET', 'models/da-vince', [], \RAGFlow\ValueObjects\Transporter\Response::from(model(), metaHeaders()));
 
-    $result = $client->models()->retrieve('da-vince');
+    $result = $client->datasets()->retrieve('da-vince');
 
     expect($result)
         ->toBeInstanceOf(RetrieveResponse::class)
@@ -42,7 +42,7 @@ test('retrieve', function () {
 test('delete fine tuned model', function () {
     $client = mockClient('DELETE', 'models/curie:ft-acmeco-2021-03-03-21-44-20', [], \RAGFlow\ValueObjects\Transporter\Response::from(fineTunedModelDeleteResource(), metaHeaders()));
 
-    $result = $client->models()->delete('curie:ft-acmeco-2021-03-03-21-44-20');
+    $result = $client->datasets()->delete('curie:ft-acmeco-2021-03-03-21-44-20');
 
     expect($result)
         ->toBeInstanceOf(DeleteResponse::class)

@@ -2,11 +2,11 @@
 
 namespace RAGFlow\Contracts\Resources;
 
-use RAGFlow\Responses\Models\DeleteResponse;
-use RAGFlow\Responses\Models\ListResponse;
-use RAGFlow\Responses\Models\RetrieveResponse;
+use RAGFlow\Responses\Datasets\DeleteResponse;
+use RAGFlow\Responses\Datasets\ListResponse;
+use RAGFlow\Responses\Datasets\RetrieveResponse;
 
-interface ModelsContract
+interface DatasetsContract
 {
     /**
      * Lists the currently available models, and provides basic information about each one such as the owner and availability.
