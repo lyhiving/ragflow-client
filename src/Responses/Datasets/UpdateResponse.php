@@ -10,7 +10,7 @@ use RAGFlow\Responses\Concerns\ArrayAccessible;
 /**
  * @implements ResponseContract<array{code: int}>
  */
-final class DeleteResponse implements ResponseContract
+final class UpdateResponse implements ResponseContract
 {
     /**
      * @use ArrayAccessible<array{code: int}>
@@ -44,7 +44,7 @@ final class DeleteResponse implements ResponseContract
     }
 
     /**
-     * Returns whether the deletion was successful.
+     * Returns whether the update was successful.
      */
     public function isSuccessful(): bool
     {

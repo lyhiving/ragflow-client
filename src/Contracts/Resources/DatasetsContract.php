@@ -2,30 +2,46 @@
 
 namespace RAGFlow\Contracts\Resources;
 
+use RAGFlow\Responses\Datasets\CreateResponse;
 use RAGFlow\Responses\Datasets\DeleteResponse;
 use RAGFlow\Responses\Datasets\ListResponse;
 use RAGFlow\Responses\Datasets\RetrieveResponse;
+use RAGFlow\Responses\Datasets\UpdateResponse;
 
 interface DatasetsContract
 {
     /**
-     * Lists the currently available models, and provides basic information about each one such as the owner and availability.
+     * Creates a dataset.
      *
-     * @see https://ragflow.io/docs/dev/http_api_reference#models/list
+     * @see https://ragflow.io/docs/dev/http_api_reference#create-dataset
      */
-    public function list(): ListResponse;
+    public function create(array $parameters): CreateResponse;
 
     /**
-     * Retrieves a model instance, providing basic information about the model such as the owner and permissioning.
+     * Lists the currently available datasets, and provides basic information about each one.
      *
-     * @see https://ragflow.io/docs/dev/http_api_reference#models/retrieve
+     * @see https://ragflow.io/docs/dev/http_api_reference#list-datasets
      */
-    public function retrieve(string $model): RetrieveResponse;
+    public function list(array $parameters = []): ListResponse;
 
     /**
-     * Delete a fine-tuned model. You must have the Owner role in your organization.
+     * Retrieves a dataset instance, providing basic information about the dataset.
      *
-     * @see https://ragflow.io/docs/dev/http_api_reference#fine-tunes/delete-model
+     * @see https://ragflow.io/docs/dev/http_api_reference#retrieve-dataset
      */
-    public function delete(string $model): DeleteResponse;
+    public function retrieve(string $datasetId): RetrieveResponse;
+
+    /**
+     * Updates configurations for a specified dataset.
+     *
+     * @see https://ragflow.io/docs/dev/http_api_reference#update-dataset
+     */
+    public function update(string $datasetId, array $parameters): UpdateResponse;
+
+    /**
+     * Deletes datasets by ID.
+     *
+     * @see https://ragflow.io/docs/dev/http_api_reference#delete-datasets
+     */
+    public function delete(array $parameters): DeleteResponse;
 }

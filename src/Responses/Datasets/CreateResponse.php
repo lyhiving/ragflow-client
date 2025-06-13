@@ -8,26 +8,27 @@ use RAGFlow\Contracts\ResponseContract;
 use RAGFlow\Responses\Concerns\ArrayAccessible;
 
 /**
- * @implements ResponseContract<array{id: string, name: string, avatar: string, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, pagerank: int, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}>
+ * @implements ResponseContract<array{id: string, name: string, avatar: string|null, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, pagerank: int, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}>
  */
-final class RetrieveResponse implements ResponseContract
+final class CreateResponse implements ResponseContract
 {
     /**
-     * @use ArrayAccessible<array{id: string, name: string, avatar: string, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, pagerank: int, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}>
+     * @use ArrayAccessible<array{id: string, name: string, avatar: string|null, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, pagerank: int, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}>
      */
     use ArrayAccessible;
 
     /**
-     * @param  array{id: string, name: string, avatar: string, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, pagerank: int, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}  $attributes
+     * @param  array{id: string, name: string, avatar: string|null, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, pagerank: int, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}  $attributes
      */
     private function __construct(
         private readonly array $attributes,
-    ) {}
+    ) {
+    }
 
     /**
      * Acts as static factory, and returns a new Response instance.
      *
-     * @param  array{id: string, name: string, avatar: string, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, pagerank: int, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}  $attributes
+     * @param  array{id: string, name: string, avatar: string|null, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, pagerank: int, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}  $attributes
      */
     public static function from(array $attributes): self
     {
@@ -53,7 +54,7 @@ final class RetrieveResponse implements ResponseContract
     /**
      * Returns the dataset avatar.
      */
-    public function avatar(): string
+    public function avatar(): ?string
     {
         return $this->attributes['avatar'];
     }

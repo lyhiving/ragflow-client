@@ -5,54 +5,44 @@ declare(strict_types=1);
 namespace RAGFlow\Responses\Datasets;
 
 use RAGFlow\Contracts\ResponseContract;
-use RAGFlow\Contracts\ResponseHasMetaInformationContract;
 use RAGFlow\Responses\Concerns\ArrayAccessible;
-use RAGFlow\Responses\Concerns\HasMetaInformation;
-use RAGFlow\Responses\Meta\MetaInformation;
-use RAGFlow\Testing\Responses\Concerns\Fakeable;
 
 /**
- * @implements ResponseContract<array{object: string, data: array<int, array{id: string, object: string, created: int, owned_by: string}>}>
+ * @implements ResponseContract<array<int, array{id: string, name: string, avatar: string, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}>>
  */
-final class ListResponse implements ResponseContract, ResponseHasMetaInformationContract
+final class ListResponse implements ResponseContract
 {
     /**
-     * @use ArrayAccessible<array{object: string, data: array<int, array{id: string, object: string, created: int, owned_by: string}>}>
+     * @use ArrayAccessible<array<int, array{id: string, name: string, avatar: string, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}>>
      */
     use ArrayAccessible;
 
-    use Fakeable;
-    use HasMetaInformation;
-
     /**
-     * @param  array<int, RetrieveResponse>  $data
+     * @param  array<int, array{id: string, name: string, avatar: string, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}>  $attributes
      */
     private function __construct(
-        public readonly string $object,
-        public readonly array $data,
-        private readonly MetaInformation $meta,
-    ) {}
+        private readonly array $attributes,
+    ) {
+    }
 
     /**
      * Acts as static factory, and returns a new Response instance.
      *
-     * @param  array{object: string, data: array<int, array{id: string, object: string, created: int, owned_by: string}>}  $attributes
+     * @param  array{data: array<int, array{id: string, name: string, avatar: string, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}>}  $attributes
      */
-    public static function from(array $attributes, MetaInformation $meta): self
+    public static function from(array $attributes): self
     {
-        dd([$attributes, $meta]);
-        $data = array_map(fn (array $result): RetrieveResponse => RetrieveResponse::from(
-            $result,
-            $meta,
-        ), $attributes['data']);
+        return new self($attributes['data'] ?? []);
+    }
 
-        dd($data);
-
-        return new self(
-            $attributes['object'],
-            $data,
-            $meta,
-        );
+    /**
+     * Returns the list of datasets.
+     *
+     * @return array<int, array{id: string, name: string, avatar: string, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}>
+     */
+    public function data(): array
+    {
+        return $this->attributes;
     }
 
     /**
@@ -60,12 +50,6 @@ final class ListResponse implements ResponseContract, ResponseHasMetaInformation
      */
     public function toArray(): array
     {
-        return [
-            'object' => $this->object,
-            'data' => array_map(
-                static fn (RetrieveResponse $response): array => $response->toArray(),
-                $this->data,
-            ),
-        ];
+        return $this->attributes;
     }
 }
