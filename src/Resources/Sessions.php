@@ -44,7 +44,7 @@ final class Sessions implements SessionsContract
     /**
      * Retrieves an Session.
      *
-     * @see https://ragflow.server/docs/api-reference/Sessions/getSession
+     * @see https://ragflow.io/docs/dev/http_api_reference#Sessions/getSession
      */
     public function retrieve(string $id): SessionResponse
     {
@@ -59,7 +59,7 @@ final class Sessions implements SessionsContract
     /**
      * Modifies an Session.
      *
-     * @see https://ragflow.server/docs/api-reference/Sessions/modifySession
+     * @see https://ragflow.io/docs/dev/http_api_reference#Sessions/modifySession
      *
      * @param  array<string, mixed>  $parameters
      */
@@ -76,7 +76,7 @@ final class Sessions implements SessionsContract
     /**
      * Delete an Session.
      *
-     * @see https://ragflow.server/docs/api-reference/Sessions/deleteSession
+     * @see https://ragflow.io/docs/dev/http_api_reference#Sessions/deleteSession
      */
     public function delete(string $id): SessionDeleteResponse
     {
@@ -91,7 +91,7 @@ final class Sessions implements SessionsContract
     /**
      * Returns a list of Sessions.
      *
-     * @see https://ragflow.server/docs/api-reference/Sessions/listSessions
+     * @see https://ragflow.io/docs/dev/http_api_reference#Sessions/listSessions
      *
      * @param  array<string, mixed>  $parameters
      */

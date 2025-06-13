@@ -11,21 +11,21 @@ interface DatasetsContract
     /**
      * Lists the currently available models, and provides basic information about each one such as the owner and availability.
      *
-     * @see https://ragflow.server/docs/api-reference/models/list
+     * @see https://ragflow.io/docs/dev/http_api_reference#models/list
      */
     public function list(): ListResponse;
 
     /**
      * Retrieves a model instance, providing basic information about the model such as the owner and permissioning.
      *
-     * @see https://ragflow.server/docs/api-reference/models/retrieve
+     * @see https://ragflow.io/docs/dev/http_api_reference#models/retrieve
      */
     public function retrieve(string $model): RetrieveResponse;
 
     /**
      * Delete a fine-tuned model. You must have the Owner role in your organization.
      *
-     * @see https://ragflow.server/docs/api-reference/fine-tunes/delete-model
+     * @see https://ragflow.io/docs/dev/http_api_reference#fine-tunes/delete-model
      */
     public function delete(string $model): DeleteResponse;
 }

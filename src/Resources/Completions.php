@@ -28,7 +28,7 @@ final class Completions implements CompletionsContract
     /**
      * Creates a completion for the provided prompt and parameters
      *
-     * @see https://ragflow.server/docs/api-reference/completions/create-completion
+     * @see https://ragflow.io/docs/dev/http_api_reference#completions/create-completion
      *
      * @param  array<string, mixed>  $parameters
      */
@@ -47,7 +47,7 @@ final class Completions implements CompletionsContract
     /**
      * Creates a streamed completion for the provided prompt and parameters
      *
-     * @see https://ragflow.server/docs/api-reference/completions/create-completion
+     * @see https://ragflow.io/docs/dev/http_api_reference#completions/create-completion
      *
      * @param  array<string, mixed>  $parameters
      * @return StreamResponse<CreateStreamedResponse>

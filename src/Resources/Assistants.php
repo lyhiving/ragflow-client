@@ -44,7 +44,7 @@ final class Assistants implements AssistantsContract
     /**
      * Retrieves an assistant.
      *
-     * @see https://ragflow.server/docs/api-reference/assistants/getAssistant
+     * @see https://ragflow.io/docs/dev/http_api_reference#assistants/getAssistant
      */
     public function retrieve(string $id): AssistantResponse
     {
@@ -59,7 +59,7 @@ final class Assistants implements AssistantsContract
     /**
      * Modifies an assistant.
      *
-     * @see https://ragflow.server/docs/api-reference/assistants/modifyAssistant
+     * @see https://ragflow.io/docs/dev/http_api_reference#assistants/modifyAssistant
      *
      * @param  array<string, mixed>  $parameters
      */
@@ -76,7 +76,7 @@ final class Assistants implements AssistantsContract
     /**
      * Delete an assistant.
      *
-     * @see https://ragflow.server/docs/api-reference/assistants/deleteAssistant
+     * @see https://ragflow.io/docs/dev/http_api_reference#assistants/deleteAssistant
      */
     public function delete(string $id): AssistantDeleteResponse
     {
@@ -91,7 +91,7 @@ final class Assistants implements AssistantsContract
     /**
      * Returns a list of assistants.
      *
-     * @see https://ragflow.server/docs/api-reference/assistants/listAssistants
+     * @see https://ragflow.io/docs/dev/http_api_reference#assistants/listAssistants
      *
      * @param  array<string, mixed>  $parameters
      */

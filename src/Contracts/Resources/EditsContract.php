@@ -9,7 +9,7 @@ interface EditsContract
     /**
      * Creates a new edit for the provided input, instruction, and parameters.
      *
-     * @see https://ragflow.server/docs/api-reference/edits/create
+     * @see https://ragflow.io/docs/dev/http_api_reference#edits/create
      *
      * @param  array<string, mixed>  $parameters
      *

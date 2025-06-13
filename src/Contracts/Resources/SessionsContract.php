@@ -11,7 +11,7 @@ interface SessionsContract
     /**
      * Create an assistant with a model and instructions.
      *
-     * @see https://ragflow.server/docs/api-reference/assistants/createSession
+     * @see https://ragflow.io/docs/dev/http_api_reference#assistants/createSession
      *
      * @param  array<string, mixed>  $parameters
      */
@@ -20,14 +20,14 @@ interface SessionsContract
     /**
      * Retrieves an assistant.
      *
-     * @see https://ragflow.server/docs/api-reference/assistants/getSession
+     * @see https://ragflow.io/docs/dev/http_api_reference#assistants/getSession
      */
     public function retrieve(string $id): SessionResponse;
 
     /**
      * Modifies an assistant.
      *
-     * @see https://ragflow.server/docs/api-reference/assistants/modifySession
+     * @see https://ragflow.io/docs/dev/http_api_reference#assistants/modifySession
      *
      * @param  array<string, mixed>  $parameters
      */
@@ -36,14 +36,14 @@ interface SessionsContract
     /**
      * Delete an assistant.
      *
-     * @see https://ragflow.server/docs/api-reference/assistants/deleteSession
+     * @see https://ragflow.io/docs/dev/http_api_reference#assistants/deleteSession
      */
     public function delete(string $id): SessionDeleteResponse;
 
     /**
      * Returns a list of assistants.
      *
-     * @see https://ragflow.server/docs/api-reference/assistants/listSessions
+     * @see https://ragflow.io/docs/dev/http_api_reference#assistants/listSessions
      *
      * @param  array<string, mixed>  $parameters
      */
