@@ -8,7 +8,6 @@ use RAGFlow\Contracts\Resources\DatasetsContract;
 use RAGFlow\Responses\Datasets\CreateResponse;
 use RAGFlow\Responses\Datasets\DeleteResponse;
 use RAGFlow\Responses\Datasets\ListResponse;
-use RAGFlow\Responses\Datasets\RetrieveResponse;
 use RAGFlow\Responses\Datasets\UpdateResponse;
 use RAGFlow\ValueObjects\Transporter\Payload;
 use RAGFlow\ValueObjects\Transporter\Response;
@@ -26,7 +25,7 @@ final class Datasets implements DatasetsContract
     {
         $payload = Payload::create('datasets', $parameters);
 
-        /** @var Response<array{id: string, name: string, avatar: string|null, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, pagerank: int, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}> $response */
+        /** @var Response<array> $response */
         $response = $this->transporter->requestObject($payload);
 
         return CreateResponse::from($response->data());
@@ -41,37 +40,24 @@ final class Datasets implements DatasetsContract
     {
         $payload = Payload::list('datasets', $parameters);
 
-        /** @var Response<array{data: array<int, array{id: string, name: string, avatar: string, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}>}> $response */
+        /** @var Response<array> $response */
         $response = $this->transporter->requestObject($payload);
 
         return ListResponse::from($response->data());
     }
 
     /**
-     * Retrieves a dataset instance, providing basic information about the dataset.
-     *
-     * @see https://ragflow.io/docs/dev/http_api_reference#retrieve-dataset
-     */
-    public function retrieve(string $datasetId): RetrieveResponse
-    {
-        $payload = Payload::retrieve('datasets', $datasetId);
-
-        /** @var Response<array{id: string, name: string, avatar: string, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, pagerank: int, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}> $response */
-        $response = $this->transporter->requestObject($payload);
-
-        return RetrieveResponse::from($response->data());
-    }
-
-    /**
      * Updates configurations for a specified dataset.
      *
+     * @param string $datasetId
+     * @param array{name?: string, avatar?: string, description?: string, embedding_model?: string, permission?: string, chunk_method?: string, pagerank?: int, parser_config?: array} $parameters
      * @see https://ragflow.io/docs/dev/http_api_reference#update-dataset
      */
     public function update(string $datasetId, array $parameters): UpdateResponse
     {
-        $payload = Payload::update('datasets', $datasetId, $parameters);
+        $payload = Payload::modify('datasets', $datasetId, $parameters);
 
-        /** @var Response<array{code: int}> $response */
+        /** @var Response<array> $response */
         $response = $this->transporter->requestObject($payload);
 
         return UpdateResponse::from($response->data());
@@ -86,7 +72,7 @@ final class Datasets implements DatasetsContract
     {
         $payload = Payload::delete('datasets', null, $parameters);
 
-        /** @var Response<array{code: int}> $response */
+        /** @var Response<array> $response */
         $response = $this->transporter->requestObject($payload);
 
         return DeleteResponse::from($response->data());

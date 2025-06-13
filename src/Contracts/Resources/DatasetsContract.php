@@ -5,7 +5,6 @@ namespace RAGFlow\Contracts\Resources;
 use RAGFlow\Responses\Datasets\CreateResponse;
 use RAGFlow\Responses\Datasets\DeleteResponse;
 use RAGFlow\Responses\Datasets\ListResponse;
-use RAGFlow\Responses\Datasets\RetrieveResponse;
 use RAGFlow\Responses\Datasets\UpdateResponse;
 
 interface DatasetsContract
@@ -23,13 +22,6 @@ interface DatasetsContract
      * @see https://ragflow.io/docs/dev/http_api_reference#list-datasets
      */
     public function list(array $parameters = []): ListResponse;
-
-    /**
-     * Retrieves a dataset instance, providing basic information about the dataset.
-     *
-     * @see https://ragflow.io/docs/dev/http_api_reference#retrieve-dataset
-     */
-    public function retrieve(string $datasetId): RetrieveResponse;
 
     /**
      * Updates configurations for a specified dataset.

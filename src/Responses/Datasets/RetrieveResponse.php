@@ -4,58 +4,44 @@ declare(strict_types=1);
 
 namespace RAGFlow\Responses\Datasets;
 
-use RAGFlow\Contracts\ResponseContract;
-use RAGFlow\Responses\Concerns\ArrayAccessible;
-
 /**
- * @implements ResponseContract<array{id: string, name: string, avatar: string, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, pagerank: int, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}>
+ * @implements \RAGFlow\Contracts\ResponseContract<array{code?: int, message?: string, data?: array}>
  */
-final class RetrieveResponse implements ResponseContract
+final class RetrieveResponse extends BaseResponse
 {
     /**
-     * @use ArrayAccessible<array{id: string, name: string, avatar: string, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, pagerank: int, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}>
+     * Returns the dataset data if successful.
      */
-    use ArrayAccessible;
-
-    /**
-     * @param  array{id: string, name: string, avatar: string, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, pagerank: int, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}  $attributes
-     */
-    private function __construct(
-        private readonly array $attributes,
-    ) {}
-
-    /**
-     * Acts as static factory, and returns a new Response instance.
-     *
-     * @param  array{id: string, name: string, avatar: string, description: string|null, embedding_model: string, permission: string, chunk_method: string, parser_config: array, create_date: string, create_time: int, created_by: string, document_count: int, chunk_count: int, language: string, pagerank: int, similarity_threshold: float, status: string, tenant_id: string, token_num: int, update_date: string, update_time: int, vector_similarity_weight: float}  $attributes
-     */
-    public static function from(array $attributes): self
+    public function data(): ?array
     {
-        return new self($attributes);
+        return $this->isSuccessful() ? ($this->attributes['data'] ?? null) : null;
     }
 
     /**
      * Returns the dataset ID.
      */
-    public function id(): string
+    public function id(): ?string
     {
-        return $this->attributes['id'];
+        $data = $this->data();
+        return $data['id'] ?? null;
     }
 
     /**
      * Returns the dataset name.
      */
-    public function name(): string
+    public function name(): ?string
     {
-        return $this->attributes['name'];
+        $data = $this->data();
+        return $data['name'] ?? null;
     }
 
     /**
      * Returns the dataset avatar.
      */
-    public function avatar(): string
+    public function avatar(): ?string
     {
-        return $this->attributes['avatar'];
+        $data = $this->data();
+        return $data['avatar'] ?? null;
     }
 
     /**
@@ -63,158 +49,169 @@ final class RetrieveResponse implements ResponseContract
      */
     public function description(): ?string
     {
-        return $this->attributes['description'];
+        $data = $this->data();
+        return $data['description'] ?? null;
     }
 
     /**
      * Returns the embedding model.
      */
-    public function embeddingModel(): string
+    public function embeddingModel(): ?string
     {
-        return $this->attributes['embedding_model'];
+        $data = $this->data();
+        return $data['embedding_model'] ?? null;
     }
 
     /**
      * Returns the dataset permission.
      */
-    public function permission(): string
+    public function permission(): ?string
     {
-        return $this->attributes['permission'];
+        $data = $this->data();
+        return $data['permission'] ?? null;
     }
 
     /**
      * Returns the chunk method.
      */
-    public function chunkMethod(): string
+    public function chunkMethod(): ?string
     {
-        return $this->attributes['chunk_method'];
+        $data = $this->data();
+        return $data['chunk_method'] ?? null;
     }
 
     /**
      * Returns the parser configuration.
      */
-    public function parserConfig(): array
+    public function parserConfig(): ?array
     {
-        return $this->attributes['parser_config'];
+        $data = $this->data();
+        return $data['parser_config'] ?? null;
     }
 
     /**
      * Returns the creation date.
      */
-    public function createDate(): string
+    public function createDate(): ?string
     {
-        return $this->attributes['create_date'];
+        $data = $this->data();
+        return $data['create_date'] ?? null;
     }
 
     /**
      * Returns the creation time.
      */
-    public function createTime(): int
+    public function createTime(): ?int
     {
-        return $this->attributes['create_time'];
+        $data = $this->data();
+        return $data['create_time'] ?? null;
     }
 
     /**
      * Returns the creator ID.
      */
-    public function createdBy(): string
+    public function createdBy(): ?string
     {
-        return $this->attributes['created_by'];
+        $data = $this->data();
+        return $data['created_by'] ?? null;
     }
 
     /**
      * Returns the document count.
      */
-    public function documentCount(): int
+    public function documentCount(): ?int
     {
-        return $this->attributes['document_count'];
+        $data = $this->data();
+        return $data['document_count'] ?? null;
     }
 
     /**
      * Returns the chunk count.
      */
-    public function chunkCount(): int
+    public function chunkCount(): ?int
     {
-        return $this->attributes['chunk_count'];
+        $data = $this->data();
+        return $data['chunk_count'] ?? null;
     }
 
     /**
      * Returns the language.
      */
-    public function language(): string
+    public function language(): ?string
     {
-        return $this->attributes['language'];
+        $data = $this->data();
+        return $data['language'] ?? null;
     }
 
     /**
      * Returns the page rank.
      */
-    public function pagerank(): int
+    public function pagerank(): ?int
     {
-        return $this->attributes['pagerank'];
+        $data = $this->data();
+        return $data['pagerank'] ?? null;
     }
 
     /**
      * Returns the similarity threshold.
      */
-    public function similarityThreshold(): float
+    public function similarityThreshold(): ?float
     {
-        return $this->attributes['similarity_threshold'];
+        $data = $this->data();
+        return $data['similarity_threshold'] ?? null;
     }
 
     /**
      * Returns the status.
      */
-    public function status(): string
+    public function status(): ?string
     {
-        return $this->attributes['status'];
+        $data = $this->data();
+        return $data['status'] ?? null;
     }
 
     /**
      * Returns the tenant ID.
      */
-    public function tenantId(): string
+    public function tenantId(): ?string
     {
-        return $this->attributes['tenant_id'];
+        $data = $this->data();
+        return $data['tenant_id'] ?? null;
     }
 
     /**
      * Returns the token number.
      */
-    public function tokenNum(): int
+    public function tokenNum(): ?int
     {
-        return $this->attributes['token_num'];
+        $data = $this->data();
+        return $data['token_num'] ?? null;
     }
 
     /**
      * Returns the update date.
      */
-    public function updateDate(): string
+    public function updateDate(): ?string
     {
-        return $this->attributes['update_date'];
+        $data = $this->data();
+        return $data['update_date'] ?? null;
     }
 
     /**
      * Returns the update time.
      */
-    public function updateTime(): int
+    public function updateTime(): ?int
     {
-        return $this->attributes['update_time'];
+        $data = $this->data();
+        return $data['update_time'] ?? null;
     }
 
     /**
      * Returns the vector similarity weight.
      */
-    public function vectorSimilarityWeight(): float
+    public function vectorSimilarityWeight(): ?float
     {
-        return $this->attributes['vector_similarity_weight'];
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toArray(): array
-    {
-        return $this->attributes;
+        $data = $this->data();
+        return $data['vector_similarity_weight'] ?? null;
     }
 }
