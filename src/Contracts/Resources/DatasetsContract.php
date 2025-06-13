@@ -35,5 +35,10 @@ interface DatasetsContract
      *
      * @see https://ragflow.io/docs/dev/http_api_reference#delete-datasets
      */
-    public function delete(array $parameters): DeleteResponse;
+    public function delete(string $datasetId): DeleteResponse;
+
+    /**
+     * Deletes multiple datasets by IDs.
+     */
+    public function deletes(array $parameters): DeleteResponse;
 }

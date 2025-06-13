@@ -64,13 +64,37 @@ final class Datasets implements DatasetsContract
     }
 
     /**
-     * Deletes datasets by ID.
+     * Deletes a single dataset by ID.
      *
+     * @param string $datasetId 要删除的数据集ID
+     */
+    public function delete(string $datasetId): DeleteResponse
+    {
+        $payload = Payload::delete('datasets', $datasetId);
+
+        /** @var Response<array> $response */
+        $response = $this->transporter->requestObject($payload);
+
+        return DeleteResponse::from($response->data());
+    }
+
+    /**
+     * Deletes multiple datasets by IDs.
+     *
+     * @param array{ids?: array<string>|null}|string[] $parameters 数据集ID列表或包含ids键的数组
      * @see https://ragflow.io/docs/dev/http_api_reference#delete-datasets
      */
-    public function delete(array $parameters): DeleteResponse
+    public function deletes(array $parameters): DeleteResponse
     {
-        $payload = Payload::delete('datasets', null, $parameters);
+        // 处理参数格式
+        if (!isset($parameters['ids'])) {
+            $parameters = ['ids' => $parameters];
+        }
+
+        // null 表示删除所有数据集
+        // 空数组表示不删除任何数据集
+        // 否则删除指定的数据集
+        $payload = Payload::deletes('datasets', $parameters);
 
         /** @var Response<array> $response */
         $response = $this->transporter->requestObject($payload);

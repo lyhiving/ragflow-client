@@ -68,7 +68,7 @@ final class Payload
     public static function modify(string $resource, string $id, array $parameters = []): self
     {
         $contentType = ContentType::JSON;
-        $method = Method::PUT; // 使用PUT方法进行更新
+        $method = Method::PUT;
         $uri = ResourceUri::modify($resource, $id);
 
         return new self($contentType, $method, $uri, $parameters);
@@ -127,7 +127,7 @@ final class Payload
     }
 
     /**
-     * Creates a new Payload value object from the given parameters.
+     * Creates a new Payload value object for deleting a single resource.
      */
     public static function delete(string $resource, string $id): self
     {
@@ -139,6 +139,20 @@ final class Payload
     }
 
     /**
+     * Creates a new Payload value object for deleting multiple resources.
+     * 
+     * @param array<string, mixed> $parameters
+     */
+    public static function deletes(string $resource, array $parameters): self
+    {
+        $contentType = ContentType::JSON;
+        $method = Method::DELETE;
+        $uri = ResourceUri::deletes($resource);
+
+        return new self($contentType, $method, $uri, $parameters);
+    }
+
+    /**
      * Creates a new Psr 7 Request instance.
      */
     public function toRequest(BaseUri $baseUri, Headers $headers, QueryParams $queryParams): RequestInterface
@@ -147,7 +161,7 @@ final class Payload
 
         $body = null;
 
-        $uri = $baseUri->toString().$this->uri->toString();
+        $uri = $baseUri->toString() . $this->uri->toString();
 
         $queryParams = $queryParams->toArray();
         if ($this->method === Method::GET) {
@@ -155,40 +169,16 @@ final class Payload
         }
 
         if ($queryParams !== []) {
-            $uri .= '?'.http_build_query($queryParams);
+            $uri .= '?' . http_build_query($queryParams);
         }
 
         $headers = $headers->withContentType($this->contentType);
 
-        if ($this->method === Method::POST) {
-            if ($this->contentType === ContentType::MULTIPART) {
-                $streamBuilder = new MultipartStreamBuilder($psr17Factory);
-
-                /** @var array<string, StreamInterface|string|int|float|bool|array<int, string>> $parameters */
-                $parameters = $this->parameters;
-
-                foreach ($parameters as $key => $value) {
-                    if (is_int($value) || is_float($value) || is_bool($value)) {
-                        $value = (string) $value;
-                    }
-
-                    if (is_array($value)) {
-                        foreach ($value as $nestedValue) {
-                            $streamBuilder->addResource($key.'[]', $nestedValue);
-                        }
-
-                        continue;
-                    }
-
-                    $streamBuilder->addResource($key, $value);
-                }
-
-                $body = $streamBuilder->build();
-
-                $headers = $headers->withContentType($this->contentType, '; boundary='.$streamBuilder->getBoundary());
-            } else {
-                $body = $psr17Factory->createStream(json_encode($this->parameters, JSON_THROW_ON_ERROR));
-            }
+        // 处理请求体
+        if (in_array($this->method, [Method::POST, Method::PUT, Method::DELETE])) {
+            // 确保JSON编码正确
+            $jsonData = json_encode($this->parameters, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+            $body = $psr17Factory->createStream($jsonData);
         }
 
         $request = $psr17Factory->createRequest($this->method->value, $uri);
