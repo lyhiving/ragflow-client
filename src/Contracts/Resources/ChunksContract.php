@@ -6,6 +6,7 @@ use RAGFlow\Responses\Chunks\CreateResponse;
 use RAGFlow\Responses\Chunks\ListResponse;
 use RAGFlow\Responses\Chunks\DeleteResponse;
 use RAGFlow\Responses\Chunks\UpdateResponse;
+use RAGFlow\Responses\Chunks\RetrievalResponse;
 
 interface ChunksContract
 {
@@ -45,4 +46,13 @@ interface ChunksContract
      * @param array<string, mixed> $parameters Update parameters
      */
     public function update(string $datasetId, string $documentId, string $chunkId, array $parameters): UpdateResponse;
+
+     /**
+     * 从指定数据集中检索 chunks。
+     *
+     * @param array<string, mixed> $parameters 检索参数
+     * @return RetrievalResponse
+     */
+    public function retrieve(array $parameters): RetrievalResponse;
+
 }

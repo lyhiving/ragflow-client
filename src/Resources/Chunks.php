@@ -9,6 +9,7 @@ use RAGFlow\Responses\Chunks\CreateResponse;
 use RAGFlow\Responses\Chunks\DeleteResponse;
 use RAGFlow\Responses\Chunks\ListResponse;
 use RAGFlow\Responses\Chunks\UpdateResponse;
+use RAGFlow\Responses\Chunks\RetrievalResponse;
 use RAGFlow\ValueObjects\Transporter\Payload;
 use RAGFlow\ValueObjects\Transporter\Response;
 
@@ -66,5 +67,20 @@ final class Chunks implements ChunksContract
         $response = $this->transporter->requestObject($payload);
 
         return UpdateResponse::from($response->data());
+    }
+
+    /**
+     * 从指定数据集中检索 chunks。
+     *
+     * @param array<string, mixed> $parameters 检索参数
+     */
+    public function retrieve(array $parameters): RetrievalResponse
+    {
+        $payload = Payload::create('retrieval', $parameters);
+
+        /** @var Response<array> $response */
+        $response = $this->transporter->requestObject($payload);
+
+        return RetrievalResponse::from($response->data());
     }
 }
