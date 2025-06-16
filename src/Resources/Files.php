@@ -32,6 +32,23 @@ final class Files implements FilesContract
         return CreateResponse::from($response->data());
     }
 
+
+    /**
+     * Get a specific document's information by its ID.
+     *
+     * @see https://ragflow.io/docs/dev/http_api_reference#get-document
+     */
+    public function get(string $datasetId, string $documentId, array $parameters = []): array
+    {
+        $parameters['id'] = $documentId; // 添加文档ID到请求参数
+
+        /** @var Response<array> $response */
+        $response = self::list($datasetId, $parameters);
+
+        // 返回数据中的第一条文档信息
+        return $response->data()[0] ?? [];
+    }
+
     /**
      * List documents in a specified dataset.
      *
