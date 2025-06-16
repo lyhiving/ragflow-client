@@ -62,10 +62,40 @@ final class Files implements FilesContract
     /**
      * Update configurations for a specified document.
      *
+     * Supported parameters:
+     * - name: (string) The name of the document
+     * - meta_fields: (array) The meta fields of the document as key-value pairs
+     * - chunk_method: (string) The parsing method (naive, manual, qa, table, paper, book, laws, presentation, picture, one, email)
+     * - parser_config: (array) The configuration settings for the dataset parser
+     *
+     * @param string $datasetId The ID of the associated dataset
+     * @param string $documentId The ID of the document to update
+     * @param array $parameters The update parameters
+     * @return UpdateResponse
+     *
      * @see https://ragflow.io/docs/dev/http_api_reference#update-document
      */
     public function update(string $datasetId, string $documentId, array $parameters): UpdateResponse
     {
+        // 验证 chunk_method 参数（如果提供）
+        if (isset($parameters['chunk_method'])) {
+            $validChunkMethods = [
+                'naive', 'manual', 'qa', 'table', 'paper', 
+                'book', 'laws', 'presentation', 'picture', 'one', 'email'
+            ];
+            
+            if (!in_array($parameters['chunk_method'], $validChunkMethods)) {
+                throw new \InvalidArgumentException(
+                    'Invalid chunk_method. Valid values are: ' . implode(', ', $validChunkMethods)
+                );
+            }
+        }
+
+        // 验证 meta_fields 参数（如果提供）
+        if (isset($parameters['meta_fields'])) {
+            $this->validateMetaFields($parameters['meta_fields']);
+        }
+
         $payload = Payload::modify("datasets/{$datasetId}/documents", $documentId, $parameters);
 
         /** @var Response<array> $response */
@@ -81,7 +111,6 @@ final class Files implements FilesContract
      */
     public function delete(string $datasetId, mixed $documentId): DeleteResponse
     {
-
         $parameters = is_string($documentId) ? ['ids' => [$documentId]] : (isset($documentId['ids']) ? $documentId : ['ids' => $documentId]);
         $payload = Payload::delete("datasets/{$datasetId}/documents", $parameters);
 
@@ -90,8 +119,6 @@ final class Files implements FilesContract
 
         return DeleteResponse::from($response->data());
     }
-
-
 
     /**
      * Parse documents in a dataset.
@@ -121,5 +148,84 @@ final class Files implements FilesContract
         $response = $this->transporter->requestObject($payload);
 
         return ParseResponse::from($response->data());
+    }
+
+    /**
+     * 验证元数据字段格式
+     *
+     * @param mixed $metaFields 元数据字段
+     * @throws \InvalidArgumentException 当格式无效时
+     */
+    private function validateMetaFields(mixed $metaFields): void
+    {
+        if (!is_array($metaFields)) {
+            throw new \InvalidArgumentException('meta_fields must be an array');
+        }
+
+        if (empty($metaFields)) {
+            return; // 空数组是有效的
+        }
+
+        // 检查是否为关联数组
+        if (array_keys($metaFields) === range(0, count($metaFields) - 1)) {
+            throw new \InvalidArgumentException('meta_fields must be an associative array');
+        }
+
+        // 检查键是否都是字符串
+        foreach (array_keys($metaFields) as $key) {
+            if (!is_string($key)) {
+                throw new \InvalidArgumentException('All meta_fields keys must be strings');
+            }
+        }
+    }
+
+    /**
+     * 创建标准化的元数据字段
+     *
+     * @param array $fields 原始字段数据
+     * @return array 标准化的元数据字段
+     */
+    public function createMetaFields(array $fields): array
+    {
+        $metaFields = [];
+        
+        foreach ($fields as $key => $value) {
+            // 确保键是字符串
+            $fieldKey = is_string($key) ? $key : (string)$key;
+            $metaFields[$fieldKey] = $value;
+        }
+        
+        return $metaFields;
+    }
+
+    /**
+     * 批量更新文档
+     *
+     * @param string $datasetId 数据集ID
+     * @param array $updates 更新数据数组，每个元素包含document_id和更新数据
+     * @return array 更新结果数组
+     */
+    public function batchUpdate(string $datasetId, array $updates): array
+    {
+        $results = [];
+        
+        foreach ($updates as $update) {
+            if (!isset($update['document_id'])) {
+                throw new \InvalidArgumentException('Each update must contain document_id');
+            }
+            
+            $documentId = $update['document_id'];
+            unset($update['document_id']);
+            
+            try {
+                $results[$documentId] = $this->update($datasetId, $documentId, $update);
+            } catch (\Exception $e) {
+                $results[$documentId] = [
+                    'error' => $e->getMessage()
+                ];
+            }
+        }
+        
+        return $results;
     }
 }
