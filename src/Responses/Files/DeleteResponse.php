@@ -4,57 +4,9 @@ declare(strict_types=1);
 
 namespace RAGFlow\Responses\Files;
 
-use RAGFlow\Contracts\ResponseContract;
-use RAGFlow\Contracts\ResponseHasMetaInformationContract;
-use RAGFlow\Responses\Concerns\ArrayAccessible;
-use RAGFlow\Responses\Concerns\HasMetaInformation;
-use RAGFlow\Responses\Meta\MetaInformation;
-use RAGFlow\Testing\Responses\Concerns\Fakeable;
-
 /**
- * @implements ResponseContract<array{id: string, object: string, deleted: bool}>
+ * @implements ResponseContract<array{code: int, message?: string}>
  */
-final class DeleteResponse implements ResponseContract, ResponseHasMetaInformationContract
+final class DeleteResponse extends BaseResponse
 {
-    /**
-     * @use ArrayAccessible<array{id: string, object: string, deleted: bool}>
-     */
-    use ArrayAccessible;
-
-    use Fakeable;
-    use HasMetaInformation;
-
-    private function __construct(
-        public readonly string $id,
-        public readonly string $object,
-        public readonly bool $deleted,
-        private readonly MetaInformation $meta,
-    ) {}
-
-    /**
-     * Acts as static factory, and returns a new Response instance.
-     *
-     * @param  array{id: string, object: string, deleted: bool}  $attributes
-     */
-    public static function from(array $attributes, MetaInformation $meta): self
-    {
-        return new self(
-            $attributes['id'],
-            $attributes['object'],
-            $attributes['deleted'],
-            $meta,
-        );
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->id,
-            'object' => $this->object,
-            'deleted' => $this->deleted,
-        ];
-    }
 }

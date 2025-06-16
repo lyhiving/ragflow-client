@@ -78,15 +78,7 @@ final class ResourceUri implements StringableContract
     /**
      * Creates a new ResourceUri value object that deletes a single resource.
      */
-    public static function delete(string $resource, string $id): self
-    {
-        return new self("{$resource}/{$id}");
-    }
-
-    /**
-     * Creates a new ResourceUri value object that deletes multiple resources.
-     */
-    public static function deletes(string $resource): self
+    public static function delete(string $resource): self
     {
         return new self("{$resource}");
     }

@@ -49,13 +49,11 @@ interface FilesContract
     public function update(string $datasetId, string $documentId, array $parameters): UpdateResponse;
 
     /**
-     * Delete documents from a dataset.
+     * Deletes datasets by ID.
      *
-     * @param string $datasetId The ID of the dataset
-     * @param array<string, mixed> $parameters The document IDs to delete
-     * @see https://ragflow.io/docs/dev/http_api_reference#delete-documents
+     * @see https://ragflow.io/docs/dev/http_api_reference#delete-datasets
      */
-    public function delete(string $datasetId, array $parameters): DeleteResponse;
+    public function delete(string $datasetId, mixed $parameters): DeleteResponse;
 
     /**
      * Parse documents in a dataset.

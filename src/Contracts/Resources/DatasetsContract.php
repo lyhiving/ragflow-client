@@ -37,8 +37,4 @@ interface DatasetsContract
      */
     public function delete(string $datasetId): DeleteResponse;
 
-    /**
-     * Deletes multiple datasets by IDs.
-     */
-    public function deletes(array $parameters): DeleteResponse;
 }

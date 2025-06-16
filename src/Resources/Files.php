@@ -24,7 +24,6 @@ final class Files implements FilesContract
      */
     public function upload(string $datasetId, array $parameters): CreateResponse
     {
-
         $payload = Payload::upload("datasets/{$datasetId}/documents", $parameters);
 
         /** @var Response<array> $response */
@@ -76,19 +75,23 @@ final class Files implements FilesContract
     }
 
     /**
-     * Delete documents from a dataset.
+     * Delete a single document from a dataset.
      *
      * @see https://ragflow.io/docs/dev/http_api_reference#delete-documents
      */
-    public function delete(string $datasetId, array $parameters): DeleteResponse
+    public function delete(string $datasetId, mixed $documentId): DeleteResponse
     {
-        $payload = Payload::deletes("datasets/{$datasetId}/documents", $parameters);
+
+        $parameters = is_string($documentId) ? ['ids' => [$documentId]] : (isset($documentId['ids']) ? $documentId : ['ids' => $documentId]);
+        $payload = Payload::delete("datasets/{$datasetId}/documents", $parameters);
 
         /** @var Response<array> $response */
         $response = $this->transporter->requestObject($payload);
 
         return DeleteResponse::from($response->data());
     }
+
+
 
     /**
      * Parse documents in a dataset.
@@ -112,7 +115,7 @@ final class Files implements FilesContract
      */
     public function stopParse(string $datasetId, array $parameters): ParseResponse
     {
-        $payload = Payload::deletes("datasets/{$datasetId}/chunks", $parameters);
+        $payload = Payload::delete("datasets/{$datasetId}/chunks", $parameters);
 
         /** @var Response<array> $response */
         $response = $this->transporter->requestObject($payload);

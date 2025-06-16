@@ -146,7 +146,7 @@ final class Payload
     {
         $contentType = ContentType::JSON;
         $method = Method::DELETE;
-        $uri = ResourceUri::deletes($resource);
+        $uri = ResourceUri::delete($resource);
 
         return new self($contentType, $method, $uri, $parameters);
     }
@@ -166,28 +166,15 @@ final class Payload
     /**
      * Creates a new Payload value object for deleting a single resource.
      */
-    public static function delete(string $resource, string $id): self
+    public static function delete(string $resource, array $parameters): self
     {
         $contentType = ContentType::JSON;
         $method = Method::DELETE;
-        $uri = ResourceUri::delete($resource, $id);
-
-        return new self($contentType, $method, $uri);
-    }
-
-    /**
-     * Creates a new Payload value object for deleting multiple resources.
-     * 
-     * @param array<string, mixed> $parameters
-     */
-    public static function deletes(string $resource, array $parameters): self
-    {
-        $contentType = ContentType::JSON;
-        $method = Method::DELETE;
-        $uri = ResourceUri::deletes($resource);
-
+        // $parameters = is_string($id) ? ['ids' => [$id]] : (isset($id['ids']) ? $id : ['ids' => $id]);
+        $uri = ResourceUri::delete($resource);
         return new self($contentType, $method, $uri, $parameters);
     }
+
 
     /**
      * Creates a new Psr 7 Request instance.

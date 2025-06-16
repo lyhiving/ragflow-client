@@ -4,65 +4,73 @@ declare(strict_types=1);
 
 namespace RAGFlow\Responses\Files;
 
-use RAGFlow\Contracts\ResponseContract;
-use RAGFlow\Contracts\ResponseHasMetaInformationContract;
-use RAGFlow\Responses\Concerns\ArrayAccessible;
-use RAGFlow\Responses\Concerns\HasMetaInformation;
-use RAGFlow\Responses\Meta\MetaInformation;
-use RAGFlow\Testing\Responses\Concerns\Fakeable;
+use RAGFlow\Responses\Concerns\ArrayAccessible; 
 
 /**
- * @implements ResponseContract<array{object: string, data: array<int, array{id: string, object: string, created_at: int, bytes: ?int, filename: string, purpose: string, status: string, status_details: array<array-key, mixed>|string|null}>}>
+ * @implements \RAGFlow\Contracts\ResponseContract<array{code?: int, message?: string, data?: array}>
  */
-final class ListResponse implements ResponseContract, ResponseHasMetaInformationContract
+final class ListResponse extends BaseResponse
 {
     /**
-     * @use ArrayAccessible<array{object: string, data: array<int, array{id: string, object: string, created_at: int, bytes: ?int, filename: string, purpose: string, status: string, status_details: array<array-key, mixed>|string|null}>}>
+     * @use ArrayAccessible<array{code?: int, message?: string, data?: array}>
      */
     use ArrayAccessible;
 
-    use Fakeable;
-    use HasMetaInformation;
-
     /**
-     * @param  array<int, RetrieveResponse>  $data
+     * @param array{code?: int, message?: string, data?: array} $attributes
      */
     private function __construct(
-        public readonly string $object,
-        public readonly array $data,
-        private readonly MetaInformation $meta,
+        protected readonly array $attributes
     ) {}
 
     /**
      * Acts as static factory, and returns a new Response instance.
      *
-     * @param  array{object: string, data: array<int, array{id: string, object: string, created_at: int, bytes: ?int, filename: string, purpose: string, status: string, status_details: array<array-key, mixed>|string|null}>}  $attributes
+     * @param array{code?: int, message?: string, data?: array} $attributes  
      */
-    public static function from(array $attributes, MetaInformation $meta): self
+    public static function from(array $attributes): static
     {
-        $data = array_map(fn (array $result): RetrieveResponse => RetrieveResponse::from(
-            $result,
-            $meta,
-        ), $attributes['data']);
+        return new static($attributes);
+    }
 
-        return new self(
-            $attributes['object'],
-            $data,
-            $meta,
-        );
+    /**
+     * Returns the response code.
+     */
+    public function code(): ?int 
+    {
+        return $this->attributes['code'] ?? null;
+    }
+
+    /**
+     * Returns the response message.
+     */
+    public function message(): ?string
+    {
+        return $this->attributes['message'] ?? null;
+    }
+
+
+    /**
+     * Returns the list of files.
+     */
+    public function data(): array
+    {
+        return $this->isSuccessful() ? ($this->attributes['data']['docs'] ?? []) : [];
+    }
+
+    /**
+     * Returns total count.
+     */ 
+    public function total(): int
+    {
+        return $this->isSuccessful() ? ($this->attributes['data']['total'] ?? 0) : 0;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function toArray(): array
+    public function toArray(): array 
     {
-        return [
-            'object' => $this->object,
-            'data' => array_map(
-                static fn (RetrieveResponse $response): array => $response->toArray(),
-                $this->data,
-            ),
-        ];
+        return $this->attributes;
     }
 }
