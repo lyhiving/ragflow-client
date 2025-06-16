@@ -6,7 +6,6 @@ namespace RAGFlow\Responses\Files;
 
 use RAGFlow\Contracts\ResponseContract;
 use RAGFlow\Responses\Concerns\ArrayAccessible;
-use RAGFlow\Testing\Responses\Concerns\Fakeable;
 
 /**
  * @implements ResponseContract<array{code?: int, message?: string, data?: array}>
@@ -17,7 +16,6 @@ abstract class BaseResponse implements ResponseContract
      * @use ArrayAccessible<array{code?: int, message?: string, data?: array}>
      */
     use ArrayAccessible;
-    use Fakeable;
 
     /**
      * @param array{code?: int, message?: string, data?: array} $attributes

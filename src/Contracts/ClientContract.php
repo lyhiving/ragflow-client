@@ -3,20 +3,11 @@
 namespace RAGFlow\Contracts;
 
 use RAGFlow\Contracts\Resources\AssistantsContract;
-use RAGFlow\Contracts\Resources\AudioContract;
-use RAGFlow\Contracts\Resources\BatchesContract;
 use RAGFlow\Contracts\Resources\ChatContract;
-use RAGFlow\Contracts\Resources\CompletionsContract;
-use RAGFlow\Contracts\Resources\EditsContract;
-use RAGFlow\Contracts\Resources\EmbeddingsContract;
-use RAGFlow\Contracts\Resources\FilesContract;
-use RAGFlow\Contracts\Resources\FineTunesContract;
-use RAGFlow\Contracts\Resources\FineTuningContract;
-use RAGFlow\Contracts\Resources\ImagesContract;
+use RAGFlow\Contracts\Resources\ChunksContract;
 use RAGFlow\Contracts\Resources\DatasetsContract;
-use RAGFlow\Contracts\Resources\ModerationsContract;
-use RAGFlow\Contracts\Resources\ThreadsContract;
-use RAGFlow\Contracts\Resources\VectorStoresContract;
+use RAGFlow\Contracts\Resources\CompletionsContract;
+use RAGFlow\Contracts\Resources\FilesContract;
 
 interface ClientContract
 {
@@ -35,28 +26,14 @@ interface ClientContract
      */
     public function chat(): ChatContract;
 
-    /**
-     * Get a vector representation of a given input that can be easily consumed by machine learning models and algorithms.
-     *
-     * @see https://ragflow.io/docs/dev/http_api_reference#embeddings
-     */
-    public function embeddings(): EmbeddingsContract;
 
     /**
-     * Learn how to turn audio into text.
+     * Files are used to upload documents that can be used with features like Fine-tuning.
      *
-     * @see https://ragflow.io/docs/dev/http_api_reference#audio
+     * @see https://ragflow.io/docs/dev/http_api_reference#files
      */
-    public function audio(): AudioContract;
+    public function chunks(): ChunksContract;
 
-    /**
-     * Given a prompt and an instruction, the model will return an edited version of the prompt.
-     *
-     * @see https://ragflow.io/docs/dev/http_api_reference#edits
-     * @deprecated RAGFlow has deprecated this endpoint and will stop working by January 4, 2024.
-     * https://ragflow.com/blog/gpt-4-api-general-availability#deprecation-of-the-edits-api
-     */
-    public function edits(): EditsContract;
 
     /**
      * Files are used to upload documents that can be used with features like Fine-tuning.
@@ -71,62 +48,4 @@ interface ClientContract
      * @see https://ragflow.io/docs/dev/http_api_reference#models
      */
     public function datasets(): DatasetsContract;
-
-    /**
-     * Manage fine-tuning jobs to tailor a model to your specific training data.
-     *
-     * @see https://ragflow.io/docs/dev/http_api_reference#fine-tuning
-     */
-    public function fineTuning(): FineTuningContract;
-
-    /**
-     * Manage fine-tuning jobs to tailor a model to your specific training data.
-     *
-     * @see https://ragflow.io/docs/dev/http_api_reference#fine-tunes
-     * @deprecated RAGFlow has deprecated this endpoint and will stop working by January 4, 2024.
-     * https://ragflow.com/blog/gpt-3-5-turbo-fine-tuning-and-api-updates#updated-gpt-3-models
-     */
-    public function fineTunes(): FineTunesContract;
-
-    /**
-     * Given an input text, outputs if the model classifies it as violating RAGFlow's content policy.
-     *
-     * @see https://ragflow.io/docs/dev/http_api_reference#moderations
-     */
-    public function moderations(): ModerationsContract;
-
-    /**
-     * Given a prompt and/or an input image, the model will generate a new image.
-     *
-     * @see https://ragflow.io/docs/dev/http_api_reference#images
-     */
-    public function images(): ImagesContract;
-
-    /**
-     * Build assistants that can call models and use tools to perform tasks.
-     *
-     * @see https://ragflow.io/docs/dev/http_api_reference#assistants
-     */
-    public function assistants(): AssistantsContract;
-
-    /**
-     * Create threads that assistants can interact with.
-     *
-     * @see https://ragflow.io/docs/dev/http_api_reference#threads
-     */
-    public function threads(): ThreadsContract;
-
-    /**
-     * Create large batches of API requests for asynchronous processing. The Batch API returns completions within 24 hours.
-     *
-     * @see https://ragflow.io/docs/dev/http_api_reference#batch
-     */
-    public function batches(): BatchesContract;
-
-    /**
-     * Create and update vector stores that assistants can interact with
-     *
-     * @see https://ragflow.io/docs/dev/http_api_reference#vector-stores
-     */
-    public function vectorStores(): VectorStoresContract;
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace RAGFlow\ValueObjects\Transporter;
 
-use RAGFlow\Responses\Meta\MetaInformation;
 
 /**
  * @template-covariant TData of array|string
@@ -19,8 +18,7 @@ final class Response
      * @param  TData  $data
      */
     private function __construct(
-        private readonly array|string $data,
-        private readonly MetaInformation $meta
+        private readonly array|string $data
     ) {
         // ..
     }
@@ -34,10 +32,7 @@ final class Response
      */
     public static function from(array|string $data, array $headers): self
     {
-        // @phpstan-ignore-next-line
-        $meta = MetaInformation::from($headers);
-
-        return new self($data, $meta);
+        return new self($data);
     }
 
     /**
@@ -50,11 +45,4 @@ final class Response
         return $this->data;
     }
 
-    /**
-     * Returns the meta information.
-     */
-    public function meta(): MetaInformation
-    {
-        return $this->meta;
-    }
 }

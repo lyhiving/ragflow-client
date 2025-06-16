@@ -3,10 +3,8 @@
 namespace RAGFlow\Responses;
 
 use Generator;
-use RAGFlow\Contracts\ResponseHasMetaInformationContract;
 use RAGFlow\Contracts\ResponseStreamContract;
 use RAGFlow\Exceptions\ErrorException;
-use RAGFlow\Responses\Meta\MetaInformation;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -15,7 +13,7 @@ use Psr\Http\Message\StreamInterface;
  *
  * @implements ResponseStreamContract<TResponse>
  */
-final class StreamResponse implements ResponseHasMetaInformationContract, ResponseStreamContract
+final class StreamResponse implements ResponseStreamContract
 {
     /**
      * Creates a new Stream Response instance.
@@ -109,9 +107,4 @@ final class StreamResponse implements ResponseHasMetaInformationContract, Respon
         return $buffer;
     }
 
-    public function meta(): MetaInformation
-    {
-        // @phpstan-ignore-next-line
-        return MetaInformation::from($this->response->getHeaders());
-    }
 }

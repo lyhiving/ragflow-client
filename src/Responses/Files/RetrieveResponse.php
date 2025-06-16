@@ -5,25 +5,17 @@ declare(strict_types=1);
 namespace RAGFlow\Responses\Files;
 
 use RAGFlow\Contracts\ResponseContract;
-use RAGFlow\Contracts\ResponseHasMetaInformationContract;
-use RAGFlow\Responses\Concerns\ArrayAccessible;
-use RAGFlow\Responses\Concerns\HasMetaInformation;
-use RAGFlow\Responses\Meta\MetaInformation;
-use RAGFlow\Testing\Responses\Concerns\Fakeable;
+use RAGFlow\Responses\Concerns\ArrayAccessible; 
 
 /**
  * @implements ResponseContract<array{id: string, object: string, created_at: int, bytes: ?int, filename: string, purpose: string, status: string, status_details: array<array-key, mixed>|string|null}>
  */
-final class RetrieveResponse implements ResponseContract, ResponseHasMetaInformationContract
+final class RetrieveResponse implements ResponseContract
 {
     /**
      * @use ArrayAccessible<array{id: string, object: string, created_at: int, bytes: ?int, filename: string, purpose: string, status: string, status_details: array<array-key, mixed>|string|null}>
      */
-    use ArrayAccessible;
-
-    use Fakeable;
-    use HasMetaInformation;
-
+    use ArrayAccessible; 
     /**
      * @param  array<array-key, mixed>|null  $statusDetails
      */
@@ -35,8 +27,7 @@ final class RetrieveResponse implements ResponseContract, ResponseHasMetaInforma
         public readonly string $filename,
         public readonly string $purpose,
         public readonly string $status,
-        public readonly array|string|null $statusDetails,
-        private readonly MetaInformation $meta,
+        public readonly array|string|null $statusDetails
     ) {}
 
     /**
@@ -44,7 +35,7 @@ final class RetrieveResponse implements ResponseContract, ResponseHasMetaInforma
      *
      * @param  array{id: string, object: string, created_at: int, bytes: ?int, filename: string, purpose: string, status: string, status_details: array<array-key, mixed>|string|null}  $attributes
      */
-    public static function from(array $attributes, MetaInformation $meta): self
+    public static function from(array $attributes): self
     {
         return new self(
             $attributes['id'],
