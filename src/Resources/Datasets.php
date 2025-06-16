@@ -31,6 +31,25 @@ final class Datasets implements DatasetsContract
         return CreateResponse::from($response->data());
     }
 
+
+    /**
+     * Get a specific dataset's information by its ID.
+     *
+     * @param string $datasetId The ID of the dataset to retrieve.
+     * @param array $parameters Optional parameters for the request.
+     * @see https://ragflow.io/docs/dev/http_api_reference#get-dataset
+     */
+    public function get(string $datasetId, array $parameters = []): array
+    {
+        $parameters['id'] = $datasetId; // 添加数据集ID到请求参数
+
+        /** @var Response<array> $response */
+        $response = self::list($parameters);
+
+        // 返回数据中的第一条数据集信息
+        return $response->data()[0] ?? [];
+    }
+
     /**
      * Lists the currently available datasets, and provides basic information about each one.
      *

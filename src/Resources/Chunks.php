@@ -30,6 +30,22 @@ final class Chunks implements ChunksContract
         return CreateResponse::from($response->data());
     }
 
+
+    /**
+     * 获取指定 Chunk 的信息
+     */
+    public function get(string $datasetId, string $documentId, string $chunkId, array $parameters = []): array
+    {
+        $parameters['id'] = $chunkId; // 添加文档ID到请求参数
+        $response = self::list($datasetId, $documentId, $parameters);
+        if(!isset($response['data']['chunks'][0])){
+            return [];
+        }
+        $result = $response['data']['chunks'][0];
+        $result['doc'] = $response['data']['doc']??[];
+        return $result;
+    }
+
     /**
      * 列出指定文档中的 Chunks
      */
