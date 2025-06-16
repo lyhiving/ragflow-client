@@ -84,6 +84,19 @@ final class Headers
         ]);
     }
 
+    public function withoutContentType(): self
+    {
+        return new self(array_diff_key($this->headers, ['Content-Type' => '']));
+    }
+
+    public function withHeader(string $name, string $value): self
+    {
+        return new self([
+            ...$this->headers,
+            $name => $value,
+        ]);
+    }
+
     /**
      * @return array<string, string> $headers
      */

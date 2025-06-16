@@ -105,11 +105,48 @@ final class Payload
      *
      * @param  array<string, mixed>  $parameters
      */
+    /**
+     * Creates a new Payload value object for uploading documents.
+     *
+     * @param string $resource The resource URI
+     * @param array<string, mixed> $parameters The upload parameters
+     */
     public static function upload(string $resource, array $parameters): self
     {
         $contentType = ContentType::MULTIPART;
         $method = Method::POST;
         $uri = ResourceUri::upload($resource);
+
+        // dd([$contentType, $method, $uri, $parameters]);
+        return new self($contentType, $method, $uri, $parameters);
+    }
+
+     /**
+     * Creates a new Payload value object for parsing documents.
+     *
+     * @param string $resource The resource URI
+     * @param array<string, mixed> $parameters The document IDs to parse
+     */
+    public static function parse(string $resource, array $parameters): self
+    {
+        $contentType = ContentType::JSON;
+        $method = Method::POST;
+        $uri = ResourceUri::create($resource);
+
+        return new self($contentType, $method, $uri, $parameters);
+    }
+
+    /**
+     * Creates a new Payload value object for stopping document parsing.
+     *
+     * @param string $resource The resource URI
+     * @param array<string, mixed> $parameters The document IDs to stop parsing
+     */
+    public static function stopParse(string $resource, array $parameters): self
+    {
+        $contentType = ContentType::JSON;
+        $method = Method::DELETE;
+        $uri = ResourceUri::deletes($resource);
 
         return new self($contentType, $method, $uri, $parameters);
     }
@@ -176,9 +213,40 @@ final class Payload
 
         // 处理请求体
         if (in_array($this->method, [Method::POST, Method::PUT, Method::DELETE])) {
-            // 确保JSON编码正确
-            $jsonData = json_encode($this->parameters, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
-            $body = $psr17Factory->createStream($jsonData);
+            if ($this->contentType === ContentType::MULTIPART) {
+                // 处理 multipart/form-data
+                // 由于 MultipartStreamBuilder 可能无法完全兼容 CURLFile，手动构建 multipart/form-data
+                $boundary = '--------------------------' . microtime(true) . rand(100000, 999999);
+                $eol = "\r\n";
+                $bodyContent = '';
+
+                foreach ($this->parameters as $name => $value) {
+                    if ($value instanceof \CURLFile) {
+                        $filename = $value->getPostFilename() ?: basename($value->getFilename());
+                        $mimeType = $value->getMimeType() ?: 'application/octet-stream';
+                        $fileContent = file_get_contents($value->getFilename());
+                        $bodyContent .= '--' . $boundary . $eol;
+                        $bodyContent .= 'Content-Disposition: form-data; name="' . $name . '"; filename="' . $filename . '"' . $eol;
+                        $bodyContent .= 'Content-Type: ' . $mimeType . $eol . $eol;
+                        $bodyContent .= $fileContent . $eol;
+                    } else {
+                        $bodyContent .= '--' . $boundary . $eol;
+                        $bodyContent .= 'Content-Disposition: form-data; name="' . $name . '"' . $eol . $eol;
+                        $bodyContent .= $value . $eol;
+                    }
+                }
+                $bodyContent .= '--' . $boundary . '--' . $eol;
+
+                $body = $psr17Factory->createStream($bodyContent);
+
+                // 需要手动设置 Content-Type
+                $headers = $headers->withoutContentType()->withHeader('Content-Type', 'multipart/form-data; boundary=' . $boundary);
+                // $headers = $headers->withoutContentType(); // 让 MultipartStreamBuilder 设置正确的 Content-Type
+            } else {
+                // 处理 JSON 数据
+                $jsonData = json_encode($this->parameters, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE);
+                $body = $psr17Factory->createStream($jsonData);
+            }
         }
 
         $request = $psr17Factory->createRequest($this->method->value, $uri);

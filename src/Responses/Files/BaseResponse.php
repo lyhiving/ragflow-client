@@ -6,16 +6,18 @@ namespace RAGFlow\Responses\Files;
 
 use RAGFlow\Contracts\ResponseContract;
 use RAGFlow\Responses\Concerns\ArrayAccessible;
+use RAGFlow\Testing\Responses\Concerns\Fakeable;
 
 /**
  * @implements ResponseContract<array{code?: int, message?: string, data?: array}>
  */
-final class CreateResponse implements ResponseContract
+abstract class BaseResponse implements ResponseContract
 {
     /**
      * @use ArrayAccessible<array{code?: int, message?: string, data?: array}>
      */
     use ArrayAccessible;
+    use Fakeable;
 
     /**
      * @param array{code?: int, message?: string, data?: array} $attributes
@@ -59,50 +61,12 @@ final class CreateResponse implements ResponseContract
     }
 
     /**
-     * Returns the uploaded document data.
+     * Checks if the response has an error.
      */
-    public function data(): ?array
+    public function hasError(): bool
     {
-        return $this->isSuccessful() ? ($this->attributes['data'][0] ?? null) : null;
+        return !$this->isSuccessful();
     }
-
-    /**
-     * Returns the document ID.
-     */
-    public function documentId(): ?string
-    {
-        $data = $this->data();
-        return $data['id'] ?? null; // Assuming the first document is returned
-    }
-
-    /**
-     * Returns the document name.
-     */
-    public function documentName(): ?string
-    {
-        $data = $this->data();
-        return $data['name'] ?? null; // Assuming the first document is returned
-    }
-
-    /**
-     * Returns the document size.
-     */
-    public function documentSize(): ?int
-    {
-        $data = $this->data();
-        return $data['size'] ?? null; // Assuming the first document is returned
-    }
-
-    /**
-     * Returns the document type.
-     */
-    public function documentType(): ?string
-    {
-        $data = $this->data();
-        return $data['type'] ?? null; // Assuming the first document is returned
-    }
-
-    
 
     /**
      * {@inheritDoc}

@@ -8,7 +8,8 @@ use RAGFlow\Contracts\Resources\FilesContract;
 use RAGFlow\Responses\Files\CreateResponse;
 use RAGFlow\Responses\Files\DeleteResponse;
 use RAGFlow\Responses\Files\ListResponse;
-use RAGFlow\Responses\Files\RetrieveResponse;
+use RAGFlow\Responses\Files\UpdateResponse;
+use RAGFlow\Responses\Files\ParseResponse;
 use RAGFlow\ValueObjects\Transporter\Payload;
 use RAGFlow\ValueObjects\Transporter\Response;
 
@@ -17,76 +18,105 @@ final class Files implements FilesContract
     use Concerns\Transportable;
 
     /**
-     * Returns a list of files that belong to the user's organization.
+     * Upload documents to a specified dataset.
      *
-     * @see https://ragflow.io/docs/dev/http_api_reference#files/list
+     * @see https://ragflow.io/docs/dev/http_api_reference#upload-documents
      */
-    public function list(): ListResponse
+    public function upload(string $datasetId, array $parameters): CreateResponse
     {
-        $payload = Payload::list('files');
 
-        /** @var Response<array{object: string, data: array<int, array{id: string, object: string, created_at: int, bytes: ?int, filename: string, purpose: string, status: string, status_details: array<array-key, mixed>|string|null}>}> $response */
+        $payload = Payload::upload("datasets/{$datasetId}/documents", $parameters);
+
+        /** @var Response<array> $response */
         $response = $this->transporter->requestObject($payload);
 
-        return ListResponse::from($response->data(), $response->meta());
+        return CreateResponse::from($response->data());
     }
 
     /**
-     * Returns information about a specific file.
+     * List documents in a specified dataset.
      *
-     * @see https://ragflow.io/docs/dev/http_api_reference#files/retrieve
+     * @see https://ragflow.io/docs/dev/http_api_reference#list-documents
      */
-    public function retrieve(string $file): RetrieveResponse
+    public function list(string $datasetId, array $parameters = []): ListResponse
     {
-        $payload = Payload::retrieve('files', $file);
+        $payload = Payload::list("datasets/{$datasetId}/documents", $parameters);
 
-        /** @var Response<array{id: string, object: string, created_at: int, bytes: ?int, filename: string, purpose: string, status: string, status_details: array<array-key, mixed>|string|null}> $response */
+        /** @var Response<array> $response */
         $response = $this->transporter->requestObject($payload);
 
-        return RetrieveResponse::from($response->data(), $response->meta());
+        return ListResponse::from($response->data());
     }
 
     /**
-     * Returns the contents of the specified file.
+     * Download a document from a specified dataset.
      *
-     * @see https://ragflow.io/docs/dev/http_api_reference#files/retrieve-content
+     * @see https://ragflow.io/docs/dev/http_api_reference#download-document
      */
-    public function download(string $file): string
+    public function download(string $datasetId, string $documentId): string
     {
-        $payload = Payload::retrieveContent('files', $file);
+        $payload = Payload::retrieveContent("datasets/{$datasetId}/documents", $documentId);
 
         return $this->transporter->requestContent($payload);
     }
 
     /**
-     * Upload a file that contains document(s) to be used across various endpoints/features.
+     * Update configurations for a specified document.
      *
-     * @see https://ragflow.io/docs/dev/http_api_reference#files/upload
-     *
-     * @param  array<string, mixed>  $parameters
+     * @see https://ragflow.io/docs/dev/http_api_reference#update-document
      */
-    public function upload(array $parameters): CreateResponse
+    public function update(string $datasetId, string $documentId, array $parameters): UpdateResponse
     {
-        $payload = Payload::upload('files', $parameters);
+        $payload = Payload::modify("datasets/{$datasetId}/documents", $documentId, $parameters);
 
-        /** @var Response<array{id: string, object: string, created_at: int, bytes: int, filename: string, purpose: string, status: string, status_details: array<array-key, mixed>|string|null}> $response */
+        /** @var Response<array> $response */
         $response = $this->transporter->requestObject($payload);
 
-        return CreateResponse::from($response->data(), $response->meta());
+        return UpdateResponse::from($response->data());
     }
 
     /**
-     * Delete a file.
+     * Delete documents from a dataset.
      *
-     * @see https://ragflow.io/docs/dev/http_api_reference#files/delete
+     * @see https://ragflow.io/docs/dev/http_api_reference#delete-documents
      */
-    public function delete(string $file): DeleteResponse
+    public function delete(string $datasetId, array $parameters): DeleteResponse
     {
-        $payload = Payload::delete('files', $file);
+        $payload = Payload::deletes("datasets/{$datasetId}/documents", $parameters);
 
-        /** @var Response<array{id: string, object: string, deleted: bool}> $response */
+        /** @var Response<array> $response */
         $response = $this->transporter->requestObject($payload);
 
-        return DeleteResponse::from($response->data(), $response->meta());
+        return DeleteResponse::from($response->data());
+    }
+
+    /**
+     * Parse documents in a dataset.
+     *
+     * @see https://ragflow.io/docs/dev/http_api_reference#parse-documents
+     */
+    public function parse(string $datasetId, array $parameters): ParseResponse
+    {
+        $payload = Payload::create("datasets/{$datasetId}/chunks", $parameters);
+
+        /** @var Response<array> $response */
+        $response = $this->transporter->requestObject($payload);
+
+        return ParseResponse::from($response->data());
+    }
+
+    /**
+     * Stop parsing documents.
+     *
+     * @see https://ragflow.io/docs/dev/http_api_reference#stop-parsing-documents
+     */
+    public function stopParse(string $datasetId, array $parameters): ParseResponse
+    {
+        $payload = Payload::deletes("datasets/{$datasetId}/chunks", $parameters);
+
+        /** @var Response<array> $response */
+        $response = $this->transporter->requestObject($payload);
+
+        return ParseResponse::from($response->data());
     }
 }
