@@ -18,6 +18,7 @@ use RAGFlow\Resources\Completions;
 use RAGFlow\Resources\Edits;
 use RAGFlow\Resources\Embeddings;
 use RAGFlow\Resources\Files;
+use RAGFlow\Resources\Chunks;
 use RAGFlow\Resources\FineTunes;
 use RAGFlow\Resources\FineTuning;
 use RAGFlow\Resources\Images;
@@ -119,6 +120,11 @@ final class Client implements ClientContract
     public function files(): Files
     {
         return new Files($this->transporter);
+    }
+
+    public function chunks(): Chunks
+    {
+        return new Chunks($this->transporter);
     }
 
     /**
