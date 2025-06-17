@@ -3,7 +3,7 @@
 namespace RAGFlow\Contracts;
 
 use RAGFlow\Contracts\Resources\AssistantsContract;
-use RAGFlow\Contracts\Resources\ChatContract;
+use RAGFlow\Contracts\Resources\ChatsContract;
 use RAGFlow\Contracts\Resources\ChunksContract;
 use RAGFlow\Contracts\Resources\DatasetsContract;
 use RAGFlow\Contracts\Resources\CompletionsContract;
@@ -24,7 +24,7 @@ interface ClientContract
      *
      * @see https://ragflow.io/docs/dev/http_api_reference#chat
      */
-    public function chat(): ChatContract;
+    public function chats(): ChatsContract;
 
 
     /**
