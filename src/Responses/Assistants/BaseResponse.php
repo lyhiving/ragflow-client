@@ -46,7 +46,7 @@ abstract class BaseResponse implements ResponseContract
     /**
      * 获取响应代码
      */
-    public function getCode(): int
+    public function code(): int
     {
         return $this->attributes['code'];
     }
@@ -54,7 +54,7 @@ abstract class BaseResponse implements ResponseContract
     /**
      * 获取响应消息
      */
-    public function getMessage(): ?string
+    public function message(): ?string
     {
         return $this->attributes['message'] ?? null;
     }
@@ -64,7 +64,7 @@ abstract class BaseResponse implements ResponseContract
      */
     public function isSuccess(): bool
     {
-        return $this->getCode() === 0;
+        return $this->code() === 0;
     }
 
     /**

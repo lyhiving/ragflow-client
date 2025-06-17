@@ -55,7 +55,7 @@ final class ListResponse extends BaseResponse
      */
     public function data(): array
     {
-        return $this->isSuccessful() ? ($this->attributes['data']['docs'] ?? []) : [];
+        return $this->isSuccess() ? ($this->attributes['data']['docs'] ?? []) : [];
     }
 
     /**
@@ -63,7 +63,7 @@ final class ListResponse extends BaseResponse
      */ 
     public function total(): int
     {
-        return $this->isSuccessful() ? ($this->attributes['data']['total'] ?? 0) : 0;
+        return $this->isSuccess() ? ($this->attributes['data']['total'] ?? 0) : 0;
     }
 
     /**

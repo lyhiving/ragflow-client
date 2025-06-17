@@ -39,7 +39,7 @@ final class ErrorException extends Exception
      */
     public function getErrorMessage(): string
     {
-        return $this->getMessage();
+        return $this->message();
     }
 
     /**

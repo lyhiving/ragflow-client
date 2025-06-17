@@ -53,7 +53,7 @@ abstract class BaseResponse implements ResponseContract
     /**
      * Checks if the response is successful.
      */
-    public function isSuccessful(): bool
+    public function isSuccess(): bool
     {
         return ($this->attributes['code'] ?? null) === 0;
     }
@@ -63,7 +63,7 @@ abstract class BaseResponse implements ResponseContract
      */
     public function hasError(): bool
     {
-        return !$this->isSuccessful();
+        return !$this->isSuccess();
     }
 
     /**

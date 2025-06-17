@@ -14,7 +14,7 @@ final class RetrieveResponse extends BaseResponse
      */
     public function data(): ?array
     {
-        return $this->isSuccessful() ? ($this->attributes['data'] ?? null) : null;
+        return $this->isSuccess() ? ($this->attributes['data'] ?? null) : null;
     }
 
     /**

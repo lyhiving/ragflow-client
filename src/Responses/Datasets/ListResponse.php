@@ -14,6 +14,6 @@ final class ListResponse extends BaseResponse
      */
     public function data(): array
     {
-        return $this->isSuccessful() ? ($this->attributes['data'] ?? []) : [];
+        return $this->isSuccess() ? ($this->attributes['data'] ?? []) : [];
     }
 }

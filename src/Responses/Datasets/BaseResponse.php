@@ -32,7 +32,7 @@ abstract class BaseResponse implements ResponseContract
     /**
      * Returns whether the request was successful.
      */
-    public function isSuccessful(): bool
+    public function isSuccess(): bool
     {
         return ($this->attributes['code'] ?? 0) === 0;
     }

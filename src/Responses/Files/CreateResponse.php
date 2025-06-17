@@ -53,7 +53,7 @@ final class CreateResponse implements ResponseContract
     /**
      * Checks if the response is successful.
      */
-    public function isSuccessful(): bool
+    public function isSuccess(): bool
     {
         return ($this->attributes['code'] ?? null) === 0;
     }
@@ -63,7 +63,7 @@ final class CreateResponse implements ResponseContract
      */
     public function data(): ?array
     {
-        return $this->isSuccessful() ? ($this->attributes['data'][0] ?? null) : null;
+        return $this->isSuccess() ? ($this->attributes['data'][0] ?? null) : null;
     }
 
     /**

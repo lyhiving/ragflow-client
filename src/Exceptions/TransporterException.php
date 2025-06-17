@@ -14,6 +14,6 @@ final class TransporterException extends Exception
      */
     public function __construct(ClientExceptionInterface $exception)
     {
-        parent::__construct($exception->getMessage(), 0, $exception);
+        parent::__construct($exception->message(), 0, $exception);
     }
 }

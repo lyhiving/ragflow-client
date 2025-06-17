@@ -238,7 +238,7 @@ final class Files implements FilesContract
                 $results[$documentId] = $this->update($datasetId, $documentId, $update);
             } catch (\Exception $e) {
                 $results[$documentId] = [
-                    'error' => $e->getMessage()
+                    'error' => $e->message()
                 ];
             }
         }
