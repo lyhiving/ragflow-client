@@ -4,10 +4,11 @@ declare (strict_types = 1);
 
 namespace RAGFlow;
 
-
+use Jenssegers\Agent\Facades\Agent;
 use RAGFlow\Contracts\ClientContract;
 use RAGFlow\Contracts\TransporterContract;
 use RAGFlow\Resources\Assistants;
+use RAGFlow\Resources\Agents;
 use RAGFlow\Resources\Sessions;
 use RAGFlow\Resources\Chats;
 use RAGFlow\Resources\Completions;
@@ -42,12 +43,11 @@ final class Client implements ClientContract
      * SESSION MANAGEMENT
      *
      */
-    public function sessions(): Sessions
+    public function agents(): Agents
     {
-        return new Sessions($this->transporter);
+        return new Agents($this->transporter);
     }
-
-
+    
     /**
      * Converse with chat assistant
      * 
