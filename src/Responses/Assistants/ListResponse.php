@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace RAGFlow\Responses\Chats;
+namespace RAGFlow\Responses\Assistants;
 
 final class ListResponse extends BaseResponse
 {
     /**
      * 获取聊天助手列表
      */
-    public function getChats(): array
+    public function getAssistants(): array
     {
         $data = $this->getData();
         return is_array($data) ? $data : [];
@@ -20,13 +20,13 @@ final class ListResponse extends BaseResponse
      */
     public function getCount(): int
     {
-        return count($this->getChats());
+        return count($this->getAssistants());
     }
 
     /**
      * 检查是否有聊天助手
      */
-    public function hasChats(): bool
+    public function hasAssistants(): bool
     {
         return $this->getCount() > 0;
     }

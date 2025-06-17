@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace RAGFlow\Responses\Chats;
+namespace RAGFlow\Responses\Assistants;
 
 use RAGFlow\Contracts\ResponseContract;
 use RAGFlow\Responses\Concerns\ArrayAccessible;
