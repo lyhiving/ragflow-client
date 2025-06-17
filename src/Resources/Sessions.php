@@ -7,6 +7,7 @@ namespace RAGFlow\Resources;
 use RAGFlow\Contracts\Resources\SessionsContract;
 use RAGFlow\Responses\Sessions\CreateResponse;
 use RAGFlow\Responses\Sessions\CreateStreamedResponse;
+use RAGFlow\Responses\Sessions\CompletionStreamResponse;
 use RAGFlow\Responses\Sessions\DeleteResponse;
 use RAGFlow\Responses\Sessions\ListResponse;
 use RAGFlow\Responses\Sessions\UpdateResponse;
@@ -96,13 +97,22 @@ final class Sessions implements SessionsContract
      */
     public function converse(string $chatId, array $parameters): array
     {
+        if (empty($parameters['question'])) {
+            throw new \InvalidArgumentException('Question is required.');
+        }
+
         // 使用 "chats/{chat_id}/completions" 作为资源路径
         $payload = Payload::create("chats/{$chatId}/completions", $parameters);
 
         /** @var Response<array> $response */
         $response = $this->transporter->requestObject($payload);
 
-        return $response->data();
+        $data = $response->data();
+        if ($data['code'] !== 0) {
+            throw new \RuntimeException($data['message'] ?? '未知错误');
+        }
+
+        return $data;
     }
 
     /**
@@ -110,6 +120,10 @@ final class Sessions implements SessionsContract
      */
     public function converseStreamed(string $chatId, array $parameters): StreamResponse
     {
+        if (empty($parameters['question'])) {
+            throw new \InvalidArgumentException('Question is required.');
+        }
+
         $parameters = $this->setStreamParameter($parameters);
 
         // 使用 "chats/{chat_id}/completions" 作为资源路径
@@ -117,15 +131,10 @@ final class Sessions implements SessionsContract
 
         $response = $this->transporter->requestStream($payload);
 
-        return new StreamResponse(CreateStreamedResponse::class, $response);
+        return new StreamResponse(CompletionStreamResponse::class, $response);
     }
 
     /**
-     * 生成相关问题
-     */
-    public function relatedQuestions(array $parameters): array
-    {
-            /**
      * 生成相关问题
      * 
      * @param array<string, mixed> $parameters
@@ -188,7 +197,7 @@ final class Sessions implements SessionsContract
      * @param string $sessionId 会话ID
      * @return array<int, array{role: string, content: string}> 返回历史消息列表
      */
-    public function getHistory(string $chatId, string $sessionId): array 
+    public function getHistory(string $chatId, string $sessionId): array
     {
         $session = $this->get($chatId, $sessionId);
         return isset($session['messages']) ? $session['messages'] : [];

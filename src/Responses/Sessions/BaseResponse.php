@@ -6,27 +6,44 @@ namespace RAGFlow\Responses\Sessions;
 
 use RAGFlow\Contracts\ResponseContract;
 use RAGFlow\Responses\Concerns\ArrayAccessible;
-use RAGFlow\Testing\Responses\Concerns\Fakeable;
 
 /**
- * @implements ResponseContract<array{id: string, chat_id: string, name: string, create_time: int, create_date: string, update_time: int, update_date: string, messages: array}>
+ * @implements ResponseContract<array{
+ *     chat_id: string,
+ *     create_date: string,
+ *     create_time: int,
+ *     id: string,
+ *     messages: array<int, array{content: string, role: string}>,
+ *     name: string,
+ *     update_date: string,
+ *     update_time: int
+ * }>
  */
 abstract class BaseResponse implements ResponseContract
 {
-    /**
-     * @use ArrayAccessible<array{id: string, chat_id: string, name: string, create_time: int, create_date: string, update_time: int, update_date: string, messages: array}>
-     */
     use ArrayAccessible;
 
-    use Fakeable;
-
     /**
-     * @param  array{id: string, chat_id: string, name: string, create_time: int, create_date: string, update_time: int, update_date: string, messages: array}  $attributes
+     * @param array{
+     *     chat_id: string,
+     *     create_date: string,
+     *     create_time: int,
+     *     id: string,
+     *     messages: array<int, array{content: string, role: string}>,
+     *     name: string,
+     *     update_date: string,
+     *     update_time: int
+     * } $attributes
      */
-    final public function __construct(
-        public readonly array $attributes,
+    public function __construct(
+        protected array $attributes
     ) {
     }
+
+    /**
+     * 从API响应创建实例
+     */
+    abstract public static function from(array $response): static;
 
     /**
      * 获取会话ID
@@ -53,7 +70,7 @@ abstract class BaseResponse implements ResponseContract
     }
 
     /**
-     * 获取创建时间
+     * 获取创建时间戳
      */
     public function createTime(): int
     {
@@ -69,7 +86,7 @@ abstract class BaseResponse implements ResponseContract
     }
 
     /**
-     * 获取更新时间
+     * 获取更新时间戳
      */
     public function updateTime(): int
     {
@@ -85,11 +102,13 @@ abstract class BaseResponse implements ResponseContract
     }
 
     /**
-     * 获取消息列表
+     * 获取会话消息列表
+     * 
+     * @return array<int, array{content: string, role: string}>
      */
     public function messages(): array
     {
-        return $this->attributes['messages'];
+        return $this->attributes['messages'] ?? [];
     }
 
     /**

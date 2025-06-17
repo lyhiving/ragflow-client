@@ -6,6 +6,14 @@ namespace RAGFlow\Responses\Assistants;
 
 final class CreateResponse extends BaseResponse
 {
+     /**
+     * 获取创建的聊天助手ID
+     */
+    public function id(): ?string
+    {
+        return $this->getId();
+    }
+
     /**
      * 获取创建的聊天助手ID
      */

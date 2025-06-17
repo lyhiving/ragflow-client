@@ -4,29 +4,16 @@ declare(strict_types=1);
 
 namespace RAGFlow\Responses\Sessions;
 
-use RAGFlow\Contracts\ResponseContract;
-
-/**
- * @implements ResponseContract<array{code: int}>
- */
-final class UpdateResponse implements ResponseContract
+final class UpdateResponse extends BaseResponse
 {
     /**
-     * @param  array{code: int}  $attributes
-     */
-    public function __construct(
-        public readonly array $attributes,
-    ) {
-    }
-
-    /**
-     * 从响应数据创建实例
+     * 从API响应创建实例
      *
-     * @param  array{code: int}  $attributes
+     * @param array{code: int, message?: string} $response
      */
-    public static function from(array $attributes): self
+    public static function from(array $response): static
     {
-        return new self($attributes);
+        return new static($response);
     }
 
     /**
@@ -38,10 +25,26 @@ final class UpdateResponse implements ResponseContract
     }
 
     /**
-     * {@inheritDoc}
+     * 检查响应是否成功
      */
-    public function toArray(): array
+    public function isSuccess(): bool
     {
-        return $this->attributes;
+        return $this->isUpdated();
+    }
+    
+    /**
+     * 获取响应代码
+     */
+    public function code(): int
+    {
+        return $this->attributes['code'];
+    }
+    
+    /**
+     * 获取响应消息
+     */
+    public function message(): string
+    {
+        return $this->attributes['message'] ?? '';
     }
 }

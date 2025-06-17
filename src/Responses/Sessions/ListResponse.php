@@ -4,53 +4,35 @@ declare(strict_types=1);
 
 namespace RAGFlow\Responses\Sessions;
 
-use RAGFlow\Contracts\ResponseContract;
-use RAGFlow\Responses\Concerns\ArrayAccessible;
-use RAGFlow\Testing\Responses\Concerns\Fakeable;
-
-/**
- * @implements ResponseContract<array{data: array<int, array{id: string, chat: string, name: string, create_time: int, create_date: string, update_time: int, update_date: string, messages: array}>}>
- */
-final class ListResponse implements ResponseContract
+final class ListResponse extends BaseResponse
 {
     /**
-     * @use ArrayAccessible<array{data: array<int, array{id: string, chat: string, name: string, create_time: int, create_date: string, update_time: int, update_date: string, messages: array}>}>
-     */
-    use ArrayAccessible;
-
-    use Fakeable;
-
-    /**
-     * @param  array{data: array<int, array{id: string, chat: string, name: string, create_time: int, create_date: string, update_time: int, update_date: string, messages: array}>}  $attributes
-     */
-    public function __construct(
-        public readonly array $attributes,
-    ) {
-    }
-
-    /**
-     * 从响应数据创建实例
+     * 从API响应创建实例
      *
-     * @param  array{code: int, data: array<int, array{id: string, chat: string, name: string, create_time: int, create_date: string, update_time: int, update_date: string, messages: array}>}  $attributes
+     * @param array{code: int, message?: string, data: array} $response
      */
-    public static function from(array $attributes): self
+    public static function from(array $response): static
     {
-        return new self($attributes);
+        if ($response['code'] !== 0) {
+            throw new \RuntimeException($response['message'] ?? '未知错误', $response['code']);
+        }
+        
+        return new static($response['data']);
     }
 
     /**
-     * 获取会话列表
+     * 获取会话列表数据
      */
     public function data(): array
     {
-        return $this->attributes['data'];
+        return $this->attributes['data'] ?? [];
     }
 
     /**
-     * {@inheritDoc}
+     * 检查响应是否成功
      */
-    public function toArray(): array
+    public function isSuccess(): bool
     {
-        return $this->attributes;
+        return isset($this->attributes['data']);
     }
 }

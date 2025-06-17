@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace RAGFlow\Responses\Sessions;
 
-/**
- * @implements ResponseContract<array{id: string, chat_id: string, name: string, create_time: int, create_date: string, update_time: int, update_date: string, messages: array}>
- */
 final class CreateResponse extends BaseResponse
 {
     /**
-     * 从响应数据创建实例
+     * 从API响应创建实例
      *
-     * @param  array{code: int, data: array{id: string, chat_id: string, name: string, create_time: int, create_date: string, update_time: int, update_date: string, messages: array}}  $attributes
+     * @param array{code: int, message?: string, data: array} $response
      */
-    public static function from(array $attributes): self
+    public static function from(array $response): static
     {
-        return new self($attributes['data']);
+        if ($response['code'] !== 0) {
+            throw new \RuntimeException($response['message'] ?? '未知错误', $response['code']);
+        }
+        
+        return new static($response['data']);
     }
 
     /**
@@ -24,7 +25,7 @@ final class CreateResponse extends BaseResponse
      */
     public function isCreated(): bool
     {
-        return !empty($this->attributes['id']);
+        return isset($this->attributes['id']) && !empty($this->attributes['id']);
     }
 
     /**
@@ -34,5 +35,13 @@ final class CreateResponse extends BaseResponse
     {
         $messages = $this->messages();
         return !empty($messages) ? $messages[0] : null;
+    }
+
+    /**
+     * 检查响应是否成功
+     */
+    public function isSuccess(): bool
+    {
+        return $this->isCreated();
     }
 }

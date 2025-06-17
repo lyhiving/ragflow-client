@@ -28,11 +28,20 @@ final class Client implements ClientContract
     }
 
     /**
+     * Create session with chat assistant
+     * @see https://ragflow.io/docs/dev/http_api_reference#create-session-with-chat-assistant
+     */
+    public function sessions(): Sessions
+    {
+        return new Sessions($this->transporter);
+    }
+
+    /**
      * CHAT ASSISTANT MANAGEMENT
      * 
      * Build assistants that can call models and use tools to perform tasks.
      *
-     * @see https://ragflow.server/user-setting/api#create-chat-assistant
+     * @see https://ragflow.io/docs/dev/http_api_reference#create-chat-assistant
      */
     public function assistants(): Assistants
     {

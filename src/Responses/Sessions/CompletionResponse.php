@@ -4,29 +4,20 @@ declare(strict_types=1);
 
 namespace RAGFlow\Responses\Sessions;
 
-use RAGFlow\Contracts\ResponseContract;
-
-/**
- * @implements ResponseContract<array{answer: string, reference: array, audio_binary: ?string, id: ?string, session_id: string}>
- */
-final class CompletionResponse implements ResponseContract
+final class CompletionResponse extends BaseResponse
 {
     /**
-     * @param array{answer: string, reference: array, audio_binary: ?string, id: ?string, session_id: string} $attributes
-     */
-    public function __construct(
-        public readonly array $attributes,
-    ) {
-    }
-
-    /**
-     * 从响应数据创建实例
+     * 从API响应创建实例
      *
-     * @param array{code: int, data: array{answer: string, reference: array, audio_binary: ?string, id: ?string, session_id: string}} $attributes
+     * @param array{code: int, message?: string} $response
      */
-    public static function from(array $attributes): self
+    public static function from(array $response): static
     {
-        return new self($attributes['data']);
+        if ($response['code'] !== 0) {
+            throw new \RuntimeException($response['message'] ?? '未知错误', $response['code']);
+        }
+        
+        return new static($response['data']);
     }
 
     /**
@@ -42,7 +33,7 @@ final class CompletionResponse implements ResponseContract
      */
     public function reference(): array
     {
-        return $this->attributes['reference'];
+        return $this->attributes['reference'] ?? [];
     }
 
     /**
@@ -50,15 +41,7 @@ final class CompletionResponse implements ResponseContract
      */
     public function audioBinary(): ?string
     {
-        return $this->attributes['audio_binary'];
-    }
-
-    /**
-     * 获取消息ID
-     */ 
-    public function id(): ?string
-    {
-        return $this->attributes['id'];
+        return $this->attributes['audio_binary'] ?? null;
     }
 
     /**
@@ -70,10 +53,10 @@ final class CompletionResponse implements ResponseContract
     }
 
     /**
-     * {@inheritDoc}
+     * 检查响应是否成功
      */
-    public function toArray(): array
+    public function isSuccess(): bool
     {
-        return $this->attributes;
+        return isset($this->attributes['answer']);
     }
 }

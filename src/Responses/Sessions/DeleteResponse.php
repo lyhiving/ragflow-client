@@ -4,29 +4,20 @@ declare(strict_types=1);
 
 namespace RAGFlow\Responses\Sessions;
 
-use RAGFlow\Contracts\ResponseContract;
-
-/**
- * @implements ResponseContract<array{code: int}>
- */
-final class DeleteResponse implements ResponseContract
+final class DeleteResponse extends BaseResponse
 {
     /**
-     * @param  array{code: int}  $attributes
-     */
-    public function __construct(
-        public readonly array $attributes,
-    ) {
-    }
-
-    /**
-     * 从响应数据创建实例
+     * 从API响应创建实例
      *
-     * @param  array{code: int}  $attributes
+     * @param array{code: int, message?: string} $response
      */
-    public static function from(array $attributes): self
+    public static function from(array $response): static
     {
-        return new self($attributes);
+        if ($response['code'] !== 0) {
+            throw new \RuntimeException($response['message'] ?? '未知错误', $response['code']);
+        }
+        
+        return new static($response['data']);
     }
 
     /**
@@ -34,14 +25,14 @@ final class DeleteResponse implements ResponseContract
      */
     public function isDeleted(): bool
     {
-        return $this->attributes['code'] === 0;
+        return isset($this->attributes['code']) && $this->attributes['code'] === 0;
     }
 
     /**
-     * {@inheritDoc}
+     * 检查响应是否成功
      */
-    public function toArray(): array
+    public function isSuccess(): bool
     {
-        return $this->attributes;
+        return $this->isDeleted();
     }
 }
