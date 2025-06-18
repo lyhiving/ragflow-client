@@ -92,6 +92,20 @@ final class Sessions implements SessionsContract
         return $data[0];
     }
 
+    public function getOne(string $chatId, array $conditions): ?array
+    {
+        $parameters = [];
+        foreach ($conditions as $key => $value) {
+            $parameters[$key] = $value;
+        }
+
+        /** @var Response<array> $response */
+        $response = self::list($chatId, $parameters);
+
+        // 返回数据中的第一条数据集信息
+        return $response->data()[0] ?? [];
+    }
+
     /**
      * 与聊天助手对话
      */

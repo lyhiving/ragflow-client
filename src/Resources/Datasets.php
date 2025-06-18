@@ -50,6 +50,20 @@ final class Datasets implements DatasetsContract
         return $response->data()[0] ?? [];
     }
 
+    public function getOne(array $conditions): ?array
+    {
+        $parameters = [];
+        foreach ($conditions as $key => $value) {
+            $parameters[$key] = $value;
+        }
+
+        /** @var Response<array> $response */
+        $response = self::list($parameters);
+
+        // 返回数据中的第一条数据集信息
+        return $response->data()[0] ?? [];
+    }
+
     /**
      * Lists the currently available datasets, and provides basic information about each one.
      *
@@ -64,6 +78,8 @@ final class Datasets implements DatasetsContract
 
         return ListResponse::from($response->data());
     }
+
+
 
     /**
      * Updates configurations for a specified dataset.
@@ -97,5 +113,4 @@ final class Datasets implements DatasetsContract
 
         return DeleteResponse::from($response->data());
     }
-
 }

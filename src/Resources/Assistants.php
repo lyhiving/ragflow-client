@@ -89,4 +89,19 @@ final class Assistants implements AssistantsContract
         }
         return $response['data'][0];
     }
+
+    
+    public function getOne(array $conditions): ?array
+    {
+        $parameters = [];
+        foreach ($conditions as $key => $value) {
+            $parameters[$key] = $value;
+        }
+
+        $response = $this->list($parameters);
+        if (!isset($response['data'][0])) {
+            return [];
+        }
+        return $response['data'][0];
+    }
 }

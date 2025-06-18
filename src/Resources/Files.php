@@ -49,6 +49,20 @@ final class Files implements FilesContract
         return $response->data()[0] ?? [];
     }
 
+    public function getOne(string $datasetId, array $conditions): ?array
+    {
+        $parameters = [];
+        foreach ($conditions as $key => $value) {
+            $parameters[$key] = $value;
+        }
+
+        /** @var Response<array> $response */
+        $response = self::list($datasetId, $parameters);
+
+        // 返回数据中的第一条数据集信息
+        return $response->data()[0] ?? [];
+    }
+
     /**
      * List documents in a specified dataset.
      *

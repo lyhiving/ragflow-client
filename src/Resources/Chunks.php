@@ -46,6 +46,23 @@ final class Chunks implements ChunksContract
         return $result;
     }
 
+    public function getOne(string $datasetId, string $documentId, array $conditions): ?array
+    {
+        $parameters = [];
+        foreach ($conditions as $key => $value) {
+            $parameters[$key] = $value;
+        }
+
+        /** @var Response<array> $response */
+        $response = self::list($datasetId, $documentId, $parameters);
+        if(!isset($response['data']['chunks'][0])){
+            return [];
+        }
+        $result = $response['data']['chunks'][0];
+        $result['doc'] = $response['data']['doc']??[];
+        return $result;
+    }
+
     /**
      * 列出指定文档中的 Chunks
      */

@@ -64,6 +64,20 @@ final class Chats implements ChatsContract
         return $response['data'][0];
     }
 
+    public function getOne(array $conditions): ?array
+    {
+        $parameters = [];
+        foreach ($conditions as $key => $value) {
+            $parameters[$key] = $value;
+        }
+
+        /** @var Response<array> $response */
+        $response = self::list($parameters);
+
+        // 返回数据中的第一条数据集信息
+        return $response->data()[0] ?? [];
+    }
+
     /**
      * 列出聊天助手
      */
