@@ -19,8 +19,19 @@ final class Agents implements AgentsContract
     /**
      * 创建代理
      */
-    public function create(array $parameters): CreateResponse
+    public function create(array $parameters, string $templatePath = 'blank'): CreateResponse
     {
+
+        if (!isset($parameters['dsl']) || !$parameters['dsl']) {
+            $templatePath = __DIR__ . '/Templates/'.$templatePath.'.json';
+            if (str_starts_with($templatePath, '@')) {
+                $templatePath = substr($templatePath, 1);
+            }
+            if (!file_exists($templatePath)) {
+                throw new \RuntimeException('模板文件不存在: ' . $templatePath);
+            }
+            $parameters['dsl'] = json_decode(file_get_contents($templatePath), true);
+        }
         $payload = Payload::create("agents", $parameters);
 
         /** @var Response<array> $response */
@@ -35,6 +46,21 @@ final class Agents implements AgentsContract
     public function get(string $agentId, array $parameters = []): ?array
     {
         $parameters['id'] = $agentId;
+        $response = $this->list($parameters);
+        $agents = $response->getAgents();
+        if (!isset($agents[0])) {
+            return null;
+        }
+        return $agents[0];
+    }
+
+    public function getOne(array $conditions): ?array
+    {
+        $parameters = [];
+        foreach ($conditions as $key => $value) {
+            $parameters[$key] = $value;
+        }
+
         $response = $this->list($parameters);
         $agents = $response->getAgents();
         if (!isset($agents[0])) {

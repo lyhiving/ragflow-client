@@ -1,0 +1,85 @@
+{
+  "answer": [],
+  "components": {
+      "Answer:GreenReadersDrum": {
+          "downstream": [],
+          "obj": {
+              "component_name": "Answer",
+              "inputs": [],
+              "output": null,
+              "params": {}
+          },
+          "upstream": []
+      },
+      "begin": {
+          "downstream": [],
+          "obj": {
+              "component_name": "Begin",
+              "inputs": [],
+              "output": {},
+              "params": {}
+          },
+          "upstream": []
+      }
+  },
+  "embed_id": "",
+  "graph": {
+      "edges": [],
+      "nodes": [
+          {
+              "data": {
+                  "label": "Begin",
+                  "name": "begin"
+              },
+              "dragging": false,
+              "height": 44,
+              "id": "begin",
+              "position": {
+                  "x": 53.25688640427177,
+                  "y": 198.37155679786412
+              },
+              "positionAbsolute": {
+                  "x": 53.25688640427177,
+                  "y": 198.37155679786412
+              },
+              "selected": false,
+              "sourcePosition": "left",
+              "targetPosition": "right",
+              "type": "beginNode",
+              "width": 200
+          },
+          {
+              "data": {
+                  "form": {},
+                  "label": "Answer",
+                  "name": "dialog_0"
+              },
+              "dragging": false,
+              "height": 44,
+              "id": "Answer:GreenReadersDrum",
+              "position": {
+                  "x": 360.43473114516974,
+                  "y": 207.29298425089348
+              },
+              "positionAbsolute": {
+                  "x": 360.43473114516974,
+                  "y": 207.29298425089348
+              },
+              "selected": false,
+              "sourcePosition": "right",
+              "targetPosition": "left",
+              "type": "logicNode",
+              "width": 200
+          }
+      ]
+  },
+  "history": [],
+  "messages": [],
+  "path": [
+      [
+          "begin"
+      ],
+      []
+  ],
+  "reference": []
+}

@@ -234,4 +234,86 @@ final class Sessions implements SessionsContract
 
         return $response->isCreated();
     }
+
+    /**
+     * 创建代理会话
+     * @param string $agentId 代理ID
+     * @param array{
+     *   lang?: string,
+     *   file?: string,
+     *   user_id?: string
+     * } $parameters 请求参数
+     */
+    public function createAgentSession(string $agentId, array $parameters = []): CreateResponse
+    {
+        $this->ensureNotStreamed($parameters);
+
+        // 提取 user_id 作为查询参数
+        $userId = $parameters['user_id'] ?? null;
+        unset($parameters['user_id']);
+        if (!isset($parameters['lang'])) {
+            $parameters['lang'] = "Chinese";
+        }
+
+        // 构建资源路径
+        $path = "agents/{$agentId}/sessions";
+        if ($userId) {
+            $path .= "?user_id={$userId}";
+        }
+
+        // 根据参数类型决定请求方式
+        if (isset($parameters['file']) && is_file($parameters['file'])) {
+            // 文件上传模式 - 使用 multipart/form-data
+            $payload = Payload::upload($path, [
+                'file' => new \CURLFile($parameters['file'])
+            ]);
+        } else {
+            // 普通 JSON 模式
+            $payload = Payload::create($path, $parameters);
+        }
+
+        /** @var Response<array> $response */
+        $response = $this->transporter->requestObject($payload);
+        return CreateResponse::from($response->data());
+    }
+
+    /**
+     * 创建代理会话(流式)
+     *
+     * @param string $agentId 代理ID
+     * @param array{
+     *   lang?: string,
+     *   file?: string,
+     *   user_id?: string
+     * } $parameters 请求参数
+     */
+    public function createAgentSessionStreamed(string $agentId, array $parameters = []): StreamResponse
+    {
+        $parameters = $this->setStreamParameter($parameters);
+
+        // 提取 user_id 作为查询参数
+        $userId = $parameters['user_id'] ?? null;
+        unset($parameters['user_id']);
+
+        // 构建资源路径
+        $path = "agents/{$agentId}/sessions";
+        if ($userId) {
+            $path .= "?user_id={$userId}";
+        }
+
+        // 根据内容类型决定请求方式
+        if (isset($parameters['file']) && is_file($parameters['file'])) {
+            // 文件上传模式
+            $payload = Payload::upload($path, [
+                'file' => $parameters['file']
+            ]);
+        } else {
+            // JSON模式
+            $payload = Payload::create($path, $parameters);
+        }
+
+        $response = $this->transporter->requestStream($payload);
+
+        return new StreamResponse(CreateStreamedResponse::class, $response);
+    }
 }

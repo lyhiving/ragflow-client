@@ -9,23 +9,89 @@ final class CreateResponse extends BaseResponse
     /**
      * 从API响应创建实例
      *
-     * @param array{code: int, message?: string, data: array} $response
+     * @param array{
+     *     code: int,
+     *     message?: string,
+     *     data?: array{
+     *         agent_id?: string,
+     *         dsl?: array{
+     *             answer: array,
+     *             components: array<string, array{
+     *                 downstream: array,
+     *                 obj: array{
+     *                     component_name: string,
+     *                     inputs: array,
+     *                     output: mixed,
+     *                     params: array
+     *                 },
+     *                 upstream: array
+     *             }>,
+     *             graph: array{
+     *                 edges: array,
+     *                 nodes: array
+     *             },
+     *             history: array,
+     *             messages: array,
+     *             path: array,
+     *             reference: array
+     *         },
+     *         id: string,
+     *         message?: array{
+     *             content: string,
+     *             role: string
+     *         }[],
+     *         source?: string,
+     *         user_id?: string
+     *     }
+     * } $response
      */
     public static function from(array $response): static
     {
         if ($response['code'] !== 0) {
             throw new \RuntimeException($response['message'] ?? '未知错误', $response['code']);
         }
-        
+
         return new static($response['data']);
     }
 
     /**
-     * 检查会话是否创建成功
+     * 获取会话ID
      */
-    public function isCreated(): bool
+    public function id(): string
     {
-        return isset($this->attributes['id']) && !empty($this->attributes['id']);
+        return $this->attributes['id'];
+    }
+
+    /**
+     * 获取代理ID
+     */
+    public function agentId(): ?string
+    {
+        return $this->attributes['agent_id'] ?? null;
+    }
+
+    /**
+     * 获取DSL配置
+     */
+    public function dsl(): ?array
+    {
+        return $this->attributes['dsl'] ?? null;
+    }
+
+    /**
+     * 获取源类型
+     */
+    public function source(): ?string
+    {
+        return $this->attributes['source'] ?? null;
+    }
+
+    /**
+     * 获取用户ID
+     */
+    public function userId(): ?string
+    {
+        return $this->attributes['user_id'] ?? null;
     }
 
     /**
@@ -33,15 +99,14 @@ final class CreateResponse extends BaseResponse
      */
     public function getInitialMessage(): ?array
     {
-        $messages = $this->messages();
-        return !empty($messages) ? $messages[0] : null;
+        return $this->attributes['message'][0] ?? null;
     }
 
     /**
-     * 检查响应是否成功
+     * 检查是否创建成功
      */
-    public function isSuccess(): bool
+    public function isCreated(): bool
     {
-        return $this->isCreated();
+        return isset($this->attributes['id']);
     }
 }
