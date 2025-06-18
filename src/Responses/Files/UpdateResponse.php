@@ -11,4 +11,11 @@ use RAGFlow\Responses\Datasets\BaseResponse;
  */
 final class UpdateResponse extends BaseResponse
 {
+        /**
+     * Returns the list of datasets.
+     */
+    public function data(): array
+    {
+        return $this->isSuccess() ? ($this->attributes['data'] ?? []) : [];
+    }
 }
